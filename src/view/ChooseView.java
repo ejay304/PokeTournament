@@ -53,6 +53,7 @@ public class ChooseView extends JFrame {
             JPanel panelChoose = new JPanel();
             panelChoose.setPreferredSize(new Dimension(300,150));
             panelChoose.setLayout(new GridLayout(1,2));
+            System.out.println(pokemon.getName());
             panelChoose.add(new JLabel(new ImageIcon(getClass().getResource(
                             PATH + pokemon.getName() + ".png"))));
             panelChoose.add(pokemonData);            

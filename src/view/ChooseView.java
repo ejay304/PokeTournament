@@ -63,9 +63,8 @@ public class ChooseView extends JFrame {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println(pokemon.getName());
                     ChooseView.this.dispose();
-                    new TournamentView();
+                    new TournamentView(pokemon);
                 }
             });
             

@@ -4,6 +4,7 @@
  */
 package poketournament;
 
+import config.Constante;
 import java.util.Collections;
 import view.ChooseView;
 import view.TournamentView;
@@ -18,6 +19,8 @@ public class PokeTournament {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        Constante.init();
         
         new Pokemon("Florizarre",187,134,135,132); 
         new Pokemon("Tortank",186,135,152,130);

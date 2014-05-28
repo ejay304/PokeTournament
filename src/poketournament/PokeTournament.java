@@ -22,13 +22,13 @@ public class PokeTournament {
         
         Constante.init();
         
-        new Pokemon("Florizarre",187,134,135,132); 
-        new Pokemon("Tortank",186,135,152,130);
-        new Pokemon("Dracaufeu",185,136,130,120);
-        new Pokemon("Ectoplasma",167,117,112,162); 
+        new Pokemon("Florizarre",187,152,152,132); 
+        new Pokemon("Tortank",186,137,157,130);
+        new Pokemon("Dracaufeu",185,161,137,120);
+        new Pokemon("Ectoplasma",167,182,127,162); 
         new Pokemon("Rhinoferoce",212,182,172,92);
-        new Pokemon("Voltali",172,117,112,182);
-        new Pokemon("Ronflex",267,162,117,82);
+        new Pokemon("Voltali",172,162,147,182);
+        new Pokemon("Ronflex",267,162,162,82);
         new Pokemon("Dracolosse",198,186,147,132);
         
         

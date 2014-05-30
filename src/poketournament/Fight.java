@@ -20,11 +20,11 @@ public class Fight {
     public Fight(Match match, Pokemon pokemon){
         this.match = match;
         if(this.match.getPkmn1() == pokemon){
-            this.pkmnChoisi = this.match.getPkmn1();
+            this.pkmnChoisi = pokemon;
             this.pkmnEnnemi = this.match.getPkmn2();
         }else{
             this.pkmnEnnemi = this.match.getPkmn1();
-            this.pkmnChoisi = this.match.getPkmn2();            
+            this.pkmnChoisi = pokemon;            
         }
 
         this.pkmnChoisiHP = pkmnChoisi.getHp();

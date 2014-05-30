@@ -13,8 +13,7 @@ public class Pokemon{
     
     public static ArrayList<Pokemon> pokemons = new ArrayList<Pokemon>();
     
-    private Object[] moveset = new Object[4];
-    private Object type;
+    private Type type;
     
     private String name;
     private int hp;
@@ -24,9 +23,10 @@ public class Pokemon{
     private int defense;
     private int speed;
 
-    public Pokemon(String name, int hp, int attack, int defense, int speed) {
+    public Pokemon(String name, Type type, int hp, int attack, int defense, int speed) {
         this.name = name;
         this.hp = hp;
+        this.type = type;
         this.attack = attack;
         this.defense = defense;
         this.speed = speed;
@@ -48,6 +48,10 @@ public class Pokemon{
 
     public int getHp() {
         return hp;
+    }
+    
+    public Type getType(){
+        return type;
     }
 
     public ArrayList<Attack> getSkillList() {

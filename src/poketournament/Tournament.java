@@ -37,8 +37,7 @@ public class Tournament {
         }else{
             return matchFinal;
         }
-    }
-    
+    }  
 
     public void quart(){
         matchesQuart[0] = new Match(Pokemon.pokemons.get(0), 

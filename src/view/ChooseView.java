@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import poketournament.Pokemon;
+import poketournament.Tournament;
 
 /**
  *
@@ -29,7 +30,7 @@ public class ChooseView extends JFrame {
         
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("Sélection Pokemon");
-        setSize(300, 400);
+        setSize(800, 800);
         
         panel = new JPanel();
         this.add(panel);
@@ -64,7 +65,7 @@ public class ChooseView extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     ChooseView.this.dispose();
-                    new TournamentView(pokemon);
+                    new TournamentView(new Tournament(pokemon));
                 }
             });
             

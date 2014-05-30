@@ -19,6 +19,8 @@ public class Pokemon{
     private String name;
     private int hp;
     private int attack;
+    private ArrayList<Attack> skills;
+    private Fight mediator;
     private int defense;
     private int speed;
 
@@ -31,16 +33,32 @@ public class Pokemon{
         
         Pokemon.pokemons.add(this);
     }
+    
+    public void setMediator(Fight fight){
+        this.mediator = fight;
+    }
 
     public String getName() {
         return name;
+    }
+    
+    public void doAttack(Attack attack){
+        mediator.attack(this, attack);
     }
 
     public int getHp() {
         return hp;
     }
 
-    public int getAttack() {
+    public ArrayList<Attack> getSkillList() {
+        return skills;
+    }
+    
+    public void setSkillList(ArrayList<Attack> skills){
+        this.skills = skills;
+    }
+    
+    public int getAttack(){
         return attack;
     }
 

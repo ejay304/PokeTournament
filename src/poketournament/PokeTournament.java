@@ -23,6 +23,7 @@ public class PokeTournament {
 
 		Constante.init();
 
+		// Création des types
 		Type water = new Type("Eau");
 		Type grass = new Type("Plante");
 		Type fire = new Type("Feu");
@@ -41,10 +42,46 @@ public class PokeTournament {
 		Type flying = new Type("Vol");
 		Type steel = new Type("Acier");
 
+		// Gestion des résistance, faiblesses et immunités des types entre eux
 		water.setResist(water, steel, fire, ice);
 		water.setWeakness(grass, electric);
 		grass.setResist(water, electric, grass, rock);
 		grass.setWeakness(fire, ice, bug, poison, flying);
+		fire.setResist(steel, fire, ice, bug, grass);
+		fire.setWeakness(water, rock, ground);
+		normal.setWeakness(fighting);
+		normal.setImmunity(ghost);
+		dragon.setResist(water, electric, fire, grass);
+		dragon.setWeakness(dragon, ice);
+		electric.setResist(steel, electric, flying);
+		electric.setWeakness(ground);
+		ground.setResist(poison, rock);
+		ground.setWeakness(water, grass, ice);
+		ground.setImmunity(electric);
+		rock.setResist(fire, normal, poison, flying);
+		rock.setWeakness(steel, fighting, water, grass, ground);
+		fighting.setResist(bug, rock, dark);
+		fighting.setWeakness(psy, flying);
+		poison.setResist(fighting, bug, grass, poison);
+		poison.setWeakness(ground, psy);
+		ghost.setResist(bug, poison);
+		ghost.setWeakness(ghost, dark);
+		ghost.setImmunity(normal, fighting);
+		ice.setResist(ice);
+		ice.setWeakness(steel, fighting, fire, rock);
+		bug.setResist(fighting, grass, ground);
+		bug.setWeakness(fire, rock, flying);
+		psy.setResist(fighting, psy);
+		psy.setWeakness(bug, dark, ghost);
+		dark.setResist(ghost, dark);
+		dark.setWeakness(fighting, bug);
+		dark.setImmunity(psy);
+		flying.setResist(fighting, bug, grass);
+		flying.setWeakness(electric, ice, rock);
+		flying.setImmunity(ground);
+		steel.setResist(steel, dragon, ice, bug, normal, grass, psy, rock, ghost, dark, flying);
+		steel.setWeakness(fighting, fire, ground);
+		steel.setImmunity(poison);
 
 		ArrayList<Attack> skillsFlorizarre = new ArrayList<>(4);
 		skillsFlorizarre.add(new Attack("Attack1", 100, 50, water));

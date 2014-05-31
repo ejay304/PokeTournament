@@ -22,6 +22,7 @@ public class Pokemon{
     private Fight mediator;
     private int defense;
     private int speed;
+    private Status status;
 
     public Pokemon(String name, Type type, int hp, int attack, int defense, int speed) {
         this.name = name;
@@ -30,7 +31,7 @@ public class Pokemon{
         this.attack = attack;
         this.defense = defense;
         this.speed = speed;
-        
+        this.status = Status.EN_FORME;
         Pokemon.pokemons.add(this);
     }
     

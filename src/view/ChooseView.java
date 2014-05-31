@@ -62,7 +62,7 @@ public class ChooseView extends JFrame {
             
             btn.addActionListener(new ActionListener() {
 
-                @Override
+
                 public void actionPerformed(ActionEvent e) {
                     ChooseView.this.dispose();
                     new TournamentView(new Tournament(pokemon));

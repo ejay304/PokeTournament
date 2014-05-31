@@ -75,7 +75,7 @@ public class FightView extends JFrame {
                        btn.setSize(20, 200);
                        btn.addActionListener(new ActionListener() {
 
-                           @Override
+
                            public void actionPerformed(ActionEvent ae) {
                                fight.getPokemonCourrant().doAttack(attack);
                                FightView.this.repaint();

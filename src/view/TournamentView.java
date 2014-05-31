@@ -54,7 +54,7 @@ public class TournamentView extends JFrame {
                         final JButton btnCombat = new JButton();
                         btnCombat.add(new JLabel(image));
                         btnCombat.addActionListener(new ActionListener() {
-                            @Override
+
                             public void actionPerformed(ActionEvent e) {
                                 btnCombat.setEnabled(false);
                                 //TODO: Recuperer le pokemon ennemi...
@@ -87,7 +87,7 @@ public class TournamentView extends JFrame {
                         final JButton btnCombat = new JButton();
                         btnCombat.add(new JLabel(image));
                         btnCombat.addActionListener(new ActionListener() {
-                            @Override
+                            
                             public void actionPerformed(ActionEvent e) {
                                 btnCombat.setEnabled(false);
                                 //TODO: Recuperer le pokemon ennemi...

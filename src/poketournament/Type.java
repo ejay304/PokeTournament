@@ -76,6 +76,31 @@ public class Type {
 		return types;
 	}
 	
+	public boolean isResistant(Type type) {
+		return resist.contains(type);
+	}
+	
+	public boolean isWeak(Type type) {
+		return weakness.contains(type);
+	}
+	
+	public boolean isImmune(Type type) {
+		return immunity.contains(type);
+	}
+	
+	public double getVulnerabilityFactor(Type type) {
+		double factor = 1;
+		if(isImmune(type)) {
+			factor = 0;
+		} else if(isResistant(type)) {
+			factor = 0.5;
+		} else if(isWeak(type)) {
+			factor = 2;
+		}
+		return factor;
+		
+	}
+	
 	{
 		// Création des types
 		Type water = new Type("Eau");

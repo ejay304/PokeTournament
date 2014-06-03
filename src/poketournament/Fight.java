@@ -36,14 +36,15 @@ public class Fight {
 
     // c.f. : http://www.pokepedia.fr/index.php/Calcul_des_d%C3%A9g%C3%A2ts
     void attack(Pokemon source, Attack attack) {
-    	double coeff = (source.getType() == attack.getType()?1.0:1.5);
+    	double stab = (source.getType() == attack.getType()?1.0:1.5);
+    	double factor = source.getType().getVulnerabilityFactor(attack.getType());
         if(source == pkmnChoisi){
-          pkmnEnnemiHP -= ((50*0.4+2)*source.getAttack()*attack.getPower())/(pkmnEnnemi.getDefense()*50)*coeff;
+          pkmnEnnemiHP -= ((50*0.4+2)*source.getAttack()*(attack.getPower()*stab))/(pkmnEnnemi.getDefense()*50)*factor;
           if(pkmnEnnemiHP <= 0)
               System.out.println("notify");
         }
         else{
-          pkmnChoisiHP -= ((50*0.4+2)*source.getAttack()*attack.getPower())/(pkmnChoisi.getDefense()*50)*coeff;
+          pkmnChoisiHP -= ((50*0.4+2)*source.getAttack()*(attack.getPower()*stab))/(pkmnChoisi.getDefense()*50)*factor;
           if(pkmnChoisiHP <= 0)
               System.out.println("notify");
         }

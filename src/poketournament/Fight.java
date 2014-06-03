@@ -41,12 +41,12 @@ public class Fight {
         if(source == pkmnChoisi){
           pkmnEnnemiHP -= ((50*0.4+2)*source.getAttack()*(attack.getPower()*stab))/(pkmnEnnemi.getDefense()*50)*factor;
           if(pkmnEnnemiHP <= 0)
-              System.out.println("notify");
+              System.out.println("notify1");
         }
         else{
           pkmnChoisiHP -= ((50*0.4+2)*source.getAttack()*(attack.getPower()*stab))/(pkmnChoisi.getDefense()*50)*factor;
           if(pkmnChoisiHP <= 0)
-              System.out.println("notify");
+              System.out.println("notify2");
         }
     }
 

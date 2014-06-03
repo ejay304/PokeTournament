@@ -14,13 +14,19 @@ public class Match {
     private final Pokemon pkmn1;
     private final Pokemon pkmn2;
     private Pokemon winner;
+    private Boolean autoWin;
     
-    public Match(Pokemon pkmn1, Pokemon pkmn2){
+    public Match(Pokemon pkmn1, Pokemon pkmn2, Boolean autoWin){
         this.pkmn1 = pkmn1;
         this.pkmn2 = pkmn2;
+
+        this.autoWin = autoWin;
     }
     
     public Pokemon getWinner(){
+        if(autoWin)
+            // TODO randomize
+            return pkmn1;
         return winner;
     }
     

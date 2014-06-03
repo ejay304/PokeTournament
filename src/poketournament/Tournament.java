@@ -40,22 +40,39 @@ public class Tournament {
     }  
 
     public void quart(){
-        matchesQuart[0] = new Match(Pokemon.pokemons.get(0), 
-                                    Pokemon.pokemons.get(1));
-        matchesQuart[1] = new Match(Pokemon.pokemons.get(2), 
-                                    Pokemon.pokemons.get(3));
-        matchesQuart[2] = new Match(Pokemon.pokemons.get(4), 
-                                    Pokemon.pokemons.get(5));
-        matchesQuart[3] = new Match(Pokemon.pokemons.get(6), 
-                                    Pokemon.pokemons.get(7));
+        
+        boolean autoWin = true;
+        for(int i = 0 ; i < 4; i++){
+            if(Pokemon.pokemons.get(2 * i) == pkmnChoisi 
+               || Pokemon.pokemons.get(2 * i + 1) == pkmnChoisi)
+                autoWin =false;
+                
+            matchesQuart[i] = new Match(Pokemon.pokemons.get(2 * i), 
+                                        Pokemon.pokemons.get(2 * i + 1), autoWin);
+       }
     }
     
     public void demi(){
-        matchesDemi[0]  = new Match(matchesQuart[0].getWinner(), matchesQuart[1].getWinner());
-        matchesDemi[1]  = new Match(matchesQuart[2].getWinner(), matchesQuart[3].getWinner());
+        boolean autoWin = true;
+        
+        for(int i = 0 ; i < 2; i++){
+            if(matchesQuart[2 * i].getWinner() == pkmnChoisi 
+               || matchesQuart[2 * i + 1].getWinner() == pkmnChoisi)
+                autoWin =false;
+                
+            matchesDemi[i] = new Match(matchesQuart[2 * i].getWinner(),
+                                        matchesQuart[2 * i + 1].getWinner(), autoWin);
+       }
     }
     
     public void finale(){
-        matchesDemi[0]  = new Match(matchesDemi[0].getWinner(), matchesDemi[1].getWinner());
+        boolean autoWin = true;
+        
+        if(matchesDemi[0].getWinner() == pkmnChoisi 
+               || matchesDemi[1].getWinner() == pkmnChoisi)
+                autoWin =false;
+        
+        matchFinal[0]  =  new Match(matchesDemi[0].getWinner(),
+                                        matchesDemi[1].getWinner(), autoWin);
     }
 }

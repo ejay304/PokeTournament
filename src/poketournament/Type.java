@@ -66,4 +66,75 @@ public class Type {
 	public static Type getType(String name) {
 		return types.get(name);
 	}
+
+	/**
+	 * Récupère la hashmap des types.
+	 * 
+	 * @return la hashmap contenant les types
+	 */
+	public static HashMap<String, Type> getTypes() {
+		return types;
+	}
+	
+	{
+		// Création des types
+		Type water = new Type("Eau");
+		Type grass = new Type("Plante");
+		Type fire = new Type("Feu");
+		Type normal = new Type("Normal");
+		Type dragon = new Type("Dragon");
+		Type electric = new Type("Electrique");
+		Type ground = new Type("Sol");
+		Type rock = new Type("Roche");
+		Type fighting = new Type("Combat");
+		Type poison = new Type("Poison");
+		Type ghost = new Type("Spectre");
+		Type ice = new Type("Glace");
+		Type bug = new Type("Insecte");
+		Type psy = new Type("Psy");
+		Type dark = new Type("Ténèbre");
+		Type flying = new Type("Vol");
+		Type steel = new Type("Acier");
+
+		// Gestion des résistance, faiblesses et immunités des types entre eux
+		water.setResist(water, steel, fire, ice);
+		water.setWeakness(grass, electric);
+		grass.setResist(water, electric, grass, rock);
+		grass.setWeakness(fire, ice, bug, poison, flying);
+		fire.setResist(steel, fire, ice, bug, grass);
+		fire.setWeakness(water, rock, ground);
+		normal.setWeakness(fighting);
+		normal.setImmunity(ghost);
+		dragon.setResist(water, electric, fire, grass);
+		dragon.setWeakness(dragon, ice);
+		electric.setResist(steel, electric, flying);
+		electric.setWeakness(ground);
+		ground.setResist(poison, rock);
+		ground.setWeakness(water, grass, ice);
+		ground.setImmunity(electric);
+		rock.setResist(fire, normal, poison, flying);
+		rock.setWeakness(steel, fighting, water, grass, ground);
+		fighting.setResist(bug, rock, dark);
+		fighting.setWeakness(psy, flying);
+		poison.setResist(fighting, bug, grass, poison);
+		poison.setWeakness(ground, psy);
+		ghost.setResist(bug, poison);
+		ghost.setWeakness(ghost, dark);
+		ghost.setImmunity(normal, fighting);
+		ice.setResist(ice);
+		ice.setWeakness(steel, fighting, fire, rock);
+		bug.setResist(fighting, grass, ground);
+		bug.setWeakness(fire, rock, flying);
+		psy.setResist(fighting, psy);
+		psy.setWeakness(bug, dark, ghost);
+		dark.setResist(ghost, dark);
+		dark.setWeakness(fighting, bug);
+		dark.setImmunity(psy);
+		flying.setResist(fighting, bug, grass);
+		flying.setWeakness(electric, ice, rock);
+		flying.setImmunity(ground);
+		steel.setResist(steel, dragon, ice, bug, normal, grass, psy, rock, ghost, dark, flying);
+		steel.setWeakness(fighting, fire, ground);
+		steel.setImmunity(poison);
+	}
 }

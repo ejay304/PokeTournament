@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Attack {
 
-    public HashMap<String, Attack> attacks = new HashMap<String, Attack>();
+    public static HashMap<String, Attack> attacks = new HashMap<String, Attack>();
     private String name;
     private Integer power;
     private Integer accuracy;
@@ -35,4 +35,7 @@ public class Attack {
         return type;
     }
 
+    public static Attack getAttack(String name) {
+    	return attacks.get(name);
+    }
 }

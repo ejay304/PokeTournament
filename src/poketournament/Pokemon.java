@@ -60,7 +60,7 @@ public class Pokemon{
     }
     
     public void setSkillList(ArrayList<Attack> skills){
-        this.skills = skills;
+        this.skills = (ArrayList<Attack>)skills.clone();
     }
     
     public int getAttack(){

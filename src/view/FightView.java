@@ -25,7 +25,7 @@ public class FightView extends JFrame {
        this.fight = fight;
         
        // Configuration de la JFrame
-       setDefaultCloseOperation(EXIT_ON_CLOSE);    
+       //setDefaultCloseOperation(EXIT_ON_CLOSE);    
        setLayout(null);
        setTitle("Combat");
        setSize(500, 400);

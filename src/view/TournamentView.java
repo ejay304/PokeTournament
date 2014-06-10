@@ -41,9 +41,42 @@ public class TournamentView extends JFrame implements Observer {
             this.paintMatch(pkmn1, pkmn2, match);
 
         }
-        
+
         tournament.addObserver(this);
 
+    }
+    
+    public void paintPokemon(final Pokemon pkmn, final Match match){
+    
+    this.add(new JPanel() {
+            {
+                setSize(90, 85);
+                setLocation(BOXES[i]);
+                setOpaque(false);
+
+                ImageIcon image = new ImageIcon(
+                        new ImageIcon(getClass().getResource(
+                                        RESSOURCES + pkmn.getName() + ".png")).
+                        getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+
+                if (tournament.getPokemon() != pkmn) {
+                    this.add(new JLabel(image));
+                } else {
+                    final JButton btnCombat = new JButton();
+                    btnCombat.add(new JLabel(image));
+                    btnCombat.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(ActionEvent e) {
+                            btnCombat.setEnabled(false);
+                            //TODO: Recuperer le pokemon ennemi...
+                            match.start();
+                        }
+                    });
+                    this.add(btnCombat);
+                }
+            }
+        });
+        i++;
     }
 
     public void paintMatch(final Pokemon pkmn1, final Pokemon pkmn2, final Match match) {
@@ -99,7 +132,6 @@ public class TournamentView extends JFrame implements Observer {
 
                         public void actionPerformed(ActionEvent e) {
                             btnCombat.setEnabled(false);
-                            //TODO: Recuperer le pokemon ennemi...
                             match.start();
                         }
                     });
@@ -114,13 +146,16 @@ public class TournamentView extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        for (final Match match : tournament.getMatches()) {
+        if (tournament.getMatches() != null) {
+            for (final Match match : tournament.getMatches()) {
 
-            final Pokemon pkmn1 = match.getPkmn1();
-            final Pokemon pkmn2 = match.getPkmn2();
-            this.paintMatch(pkmn1, pkmn2, match);
+                final Pokemon pkmn1 = match.getPkmn1();
+                final Pokemon pkmn2 = match.getPkmn2();
+                this.paintMatch(pkmn1, pkmn2, match);
+            }
+        } else {
+            paintPokemon(, null);
         }
-
     }
 
 }

@@ -20,7 +20,7 @@ public class Tournament extends Observable implements Observer {
     private Match[] matchesHuitieme = new Match[8];
     private Match[] matchesQuart = new Match[4];
     private Match[] matchesDemi = new Match[2];
-    private Match[] matchFinal;
+    private Match[] matchFinal = new Match[1];
     private int tour;
     private int cptMatch;
 
@@ -50,9 +50,10 @@ public class Tournament extends Observable implements Observer {
 
     public void quart() {
 
-        boolean autoWin = true;
+        boolean autoWin;
         cptMatch = 4;
         for (int i = 0; i < 4; i++) {
+            autoWin = true;
             if (Pokemon.pokemons.get(2 * i) == chosenPkmn
                     || Pokemon.pokemons.get(2 * i + 1) == chosenPkmn) {
                 autoWin = false;
@@ -65,9 +66,10 @@ public class Tournament extends Observable implements Observer {
     }
 
     public void demi() {
-        boolean autoWin = true;
+        boolean autoWin;
         cptMatch = 2;
         for (int i = 0; i < 2; i++) {
+            autoWin = true;
             if (matchesQuart[2 * i].getWinner() == chosenPkmn
                     || matchesQuart[2 * i + 1].getWinner() == chosenPkmn) {
                 autoWin = false;
@@ -75,6 +77,8 @@ public class Tournament extends Observable implements Observer {
 
             matchesDemi[i] = new Match(matchesQuart[2 * i].getWinner(),
                     matchesQuart[2 * i + 1].getWinner(), autoWin, autoWin ? null : chosenPkmn);
+            
+            matchesDemi[i].addObserver(this);
         }
     }
 
@@ -88,10 +92,12 @@ public class Tournament extends Observable implements Observer {
 
         matchFinal[0] = new Match(matchesDemi[0].getWinner(),
                 matchesDemi[1].getWinner(), autoWin, autoWin ? null : chosenPkmn);
+        matchFinal[0].addObserver(this);
     }
 
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("Trolololo");
 
         if (--cptMatch == 0) {
             tour--;
@@ -103,6 +109,7 @@ public class Tournament extends Observable implements Observer {
                     demi();
                     break;
             }
+            setChanged();
             notifyObservers();
         }
     }

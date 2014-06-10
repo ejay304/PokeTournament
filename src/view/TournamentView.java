@@ -4,6 +4,8 @@ import static config.Constante.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.*;
 import poketournament.*;
 
@@ -14,9 +16,10 @@ import poketournament.*;
  * @author Alain FRESCO
  * @version 1.0
  */
-public class TournamentView extends JFrame {
+public class TournamentView extends JFrame implements Observer {
 
     private Tournament tournament;
+    private static int i = 0;
 
     public TournamentView(final Tournament tournament) {
 
@@ -31,77 +34,91 @@ public class TournamentView extends JFrame {
         setVisible(true);
         setContentPane(new JLabel(new ImageIcon(getClass().getResource(RESSOURCES + "tournament.jpg"))));
 
-        int i = 0;
         for (final Match match : tournament.getMatches()) {
-            final Point point = BOXES[i];
 
             final Pokemon pkmn1 = match.getPkmn1();
             final Pokemon pkmn2 = match.getPkmn2();
-            this.add(new JPanel() {
-                {
-                    setSize(90, 85);
-                    setLocation(point);
-                    setOpaque(false);
+            this.paintMatch(pkmn1, pkmn2, match);
 
-                    ImageIcon image = new ImageIcon(
-                            new ImageIcon(getClass().getResource(
-                                            RESSOURCES + pkmn1.getName() + ".png")).
-                            getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+        }
+        
+        tournament.addObserver(this);
 
-                    if (tournament.getPokemon() != pkmn1) {
-                        this.add(new JLabel(image));
-                    } else {
-                        final JButton btnCombat = new JButton();
-                        btnCombat.add(new JLabel(image));
-                        btnCombat.addActionListener(new ActionListener() {
+    }
 
-                            public void actionPerformed(ActionEvent e) {
-                                btnCombat.setEnabled(false);
-                                //TODO: Recuperer le pokemon ennemi...
-                                Fight fight = new Fight(match, tournament.getPokemon());
-                                new FightView(fight);
-                            }
-                        });
-                        this.add(btnCombat);
-                    }
+    public void paintMatch(final Pokemon pkmn1, final Pokemon pkmn2, final Match match) {
+
+        this.add(new JPanel() {
+            {
+                setSize(90, 85);
+                setLocation(BOXES[i]);
+                setOpaque(false);
+
+                ImageIcon image = new ImageIcon(
+                        new ImageIcon(getClass().getResource(
+                                        RESSOURCES + pkmn1.getName() + ".png")).
+                        getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+
+                if (tournament.getPokemon() != pkmn1) {
+                    this.add(new JLabel(image));
+                } else {
+                    final JButton btnCombat = new JButton();
+                    btnCombat.add(new JLabel(image));
+                    btnCombat.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(ActionEvent e) {
+                            btnCombat.setEnabled(false);
+                            //TODO: Recuperer le pokemon ennemi...
+                            match.start();
+                        }
+                    });
+                    this.add(btnCombat);
                 }
-            });
-            
-            i++;
-            final Point point2 = BOXES[i];
+            }
+        });
 
-            this.add(new JPanel() {
-                {
-                    setSize(90, 85);
-                    setLocation(point2);
-                    setOpaque(false);
+        i++;
 
-                    ImageIcon image = new ImageIcon(
-                            new ImageIcon(getClass().getResource(
-                                            RESSOURCES + pkmn2.getName() + ".png")).
-                            getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+        this.add(new JPanel() {
+            {
+                setSize(90, 85);
+                setLocation(BOXES[i]);
+                setOpaque(false);
 
-                    if (tournament.getPokemon() != pkmn2) {
-                        this.add(new JLabel(image));
-                    } else {
-                        final JButton btnCombat = new JButton();
-                        btnCombat.add(new JLabel(image));
-                        btnCombat.addActionListener(new ActionListener() {
-                            
-                            public void actionPerformed(ActionEvent e) {
-                                btnCombat.setEnabled(false);
-                                //TODO: Recuperer le pokemon ennemi...
-                                Fight fight = new Fight(match, tournament.getPokemon());
-                                new FightView(fight);
-                            }
-                        });
-                        this.add(btnCombat);
-                    }
+                ImageIcon image = new ImageIcon(
+                        new ImageIcon(getClass().getResource(
+                                        RESSOURCES + pkmn2.getName() + ".png")).
+                        getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+
+                if (tournament.getPokemon() != pkmn2) {
+                    this.add(new JLabel(image));
+                } else {
+                    final JButton btnCombat = new JButton();
+                    btnCombat.add(new JLabel(image));
+                    btnCombat.addActionListener(new ActionListener() {
+
+                        public void actionPerformed(ActionEvent e) {
+                            btnCombat.setEnabled(false);
+                            //TODO: Recuperer le pokemon ennemi...
+                            match.start();
+                        }
+                    });
+                    this.add(btnCombat);
                 }
-            });
+            }
+        });
+        i++;
 
-            this.add(new JButton());
-            i++;
+        this.add(new JButton());
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        for (final Match match : tournament.getMatches()) {
+
+            final Pokemon pkmn1 = match.getPkmn1();
+            final Pokemon pkmn2 = match.getPkmn2();
+            this.paintMatch(pkmn1, pkmn2, match);
         }
 
     }

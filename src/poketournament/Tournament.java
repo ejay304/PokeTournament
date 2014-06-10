@@ -3,76 +3,107 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package poketournament;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
  * @author Fabio
  */
-public class Tournament {
-    private final Pokemon pkmnChoisi;
-    
+public class Tournament extends Observable implements Observer {
+
+    private final Pokemon chosenPkmn;
+    private static final int NB_TOUR = 3;
+
     private Match[] matchesHuitieme = new Match[8];
     private Match[] matchesQuart = new Match[4];
     private Match[] matchesDemi = new Match[2];
     private Match[] matchFinal;
     private int tour;
-    
-    public Tournament(Pokemon pokemon){
-        this.pkmnChoisi = pokemon;
-        tour = 0;
+    private int cptMatch;
+
+    public Tournament(Pokemon pokemon) {
+        this.chosenPkmn = pokemon;
+        tour = NB_TOUR;
         quart();
     }
 
     public Pokemon getPokemon() {
-        return pkmnChoisi;
+        return chosenPkmn;
     }
-    
-    public Match[] getMatches(){
-        if (tour==0){
-            return matchesQuart;
-        }else if(tour==1){
-            return matchesDemi;
-        }else{
-            return matchFinal;
-        }
-    }  
 
-    public void quart(){
-        
-        boolean autoWin = true;
-        for(int i = 0 ; i < 4; i++){
-            if(Pokemon.pokemons.get(2 * i) == pkmnChoisi 
-               || Pokemon.pokemons.get(2 * i + 1) == pkmnChoisi)
-                autoWin =false;
-                
-            matchesQuart[i] = new Match(Pokemon.pokemons.get(2 * i), 
-                                        Pokemon.pokemons.get(2 * i + 1), autoWin);
-       }
+    public Match[] getMatches() {
+
+        switch (tour) {
+            case 3:
+                return matchesQuart;
+            case 2:
+                return matchesDemi;
+            case 1:
+                return matchFinal;
+            default:
+                return null;
+        }
     }
-    
-    public void demi(){
+
+    public void quart() {
+
         boolean autoWin = true;
-        
-        for(int i = 0 ; i < 2; i++){
-            if(matchesQuart[2 * i].getWinner() == pkmnChoisi 
-               || matchesQuart[2 * i + 1].getWinner() == pkmnChoisi)
-                autoWin =false;
-                
+        cptMatch = 4;
+        for (int i = 0; i < 4; i++) {
+            if (Pokemon.pokemons.get(2 * i) == chosenPkmn
+                    || Pokemon.pokemons.get(2 * i + 1) == chosenPkmn) {
+                autoWin = false;
+            }
+
+            matchesQuart[i] = new Match(Pokemon.pokemons.get(2 * i),
+                    Pokemon.pokemons.get(2 * i + 1), autoWin, autoWin ? null : chosenPkmn);
+            matchesQuart[i].addObserver(this);
+        }
+    }
+
+    public void demi() {
+        boolean autoWin = true;
+        cptMatch = 2;
+        for (int i = 0; i < 2; i++) {
+            if (matchesQuart[2 * i].getWinner() == chosenPkmn
+                    || matchesQuart[2 * i + 1].getWinner() == chosenPkmn) {
+                autoWin = false;
+            }
+
             matchesDemi[i] = new Match(matchesQuart[2 * i].getWinner(),
-                                        matchesQuart[2 * i + 1].getWinner(), autoWin);
-       }
+                    matchesQuart[2 * i + 1].getWinner(), autoWin, autoWin ? null : chosenPkmn);
+        }
     }
-    
-    public void finale(){
+
+    public void finale() {
         boolean autoWin = true;
-        
-        if(matchesDemi[0].getWinner() == pkmnChoisi 
-               || matchesDemi[1].getWinner() == pkmnChoisi)
-                autoWin =false;
-        
-        matchFinal[0]  =  new Match(matchesDemi[0].getWinner(),
-                                        matchesDemi[1].getWinner(), autoWin);
+        cptMatch = 1;
+        if (matchesDemi[0].getWinner() == chosenPkmn
+                || matchesDemi[1].getWinner() == chosenPkmn) {
+            autoWin = false;
+        }
+
+        matchFinal[0] = new Match(matchesDemi[0].getWinner(),
+                matchesDemi[1].getWinner(), autoWin, autoWin ? null : chosenPkmn);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+        if (--cptMatch == 0) {
+            tour--;
+            switch (tour) {
+                case 1:
+                    finale();
+                    break;
+                case 2:
+                    demi();
+                    break;
+            }
+            notifyObservers();
+        }
     }
 }

@@ -3,60 +3,72 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package poketournament;
+
+import java.util.Observable;
 
 /**
  *
  * @author Fabio
  */
-public class Fight {
+public class Fight extends Observable {
+
     private final Match match;
-    private final Pokemon pkmnChoisi;
+    private final Pokemon chosenPkmn;
     private final Pokemon pkmnEnnemi;
     private int pkmnChoisiHP;
     private int pkmnEnnemiHP;
-    
-    public Fight(Match match, Pokemon pokemon){
+
+    public Fight(Match match, Pokemon chosenPkmn) {
         this.match = match;
-        if(this.match.getPkmn1() == pokemon){
-            this.pkmnChoisi = pokemon;
+
+        if (this.match.getPkmn1() == chosenPkmn) {
+            this.chosenPkmn = chosenPkmn;
             this.pkmnEnnemi = this.match.getPkmn2();
-        }else{
+        } else {
             this.pkmnEnnemi = this.match.getPkmn1();
-            this.pkmnChoisi = pokemon;            
+            this.chosenPkmn = chosenPkmn;
         }
 
-        this.pkmnChoisiHP = pkmnChoisi.getHp();
-        this.pkmnEnnemiHP = pkmnEnnemi.getHp();
-        
-        pkmnChoisi.setMediator(this);
+        pkmnChoisiHP = chosenPkmn.getHp();
+        pkmnEnnemiHP = pkmnEnnemi.getHp();
+
+        chosenPkmn.setMediator(this);
         pkmnEnnemi.setMediator(this);
     }
 
     // c.f. : http://www.pokepedia.fr/index.php/Calcul_des_d%C3%A9g%C3%A2ts
     void attack(Pokemon source, Attack attack) {
-    	double stab = (source.getType() == attack.getType()?1.0:1.5);
-    	double factor = source.getType().getVulnerabilityFactor(attack.getType());
-        if(source == pkmnChoisi){
-          pkmnEnnemiHP -= ((50*0.4+2)*source.getAttack()*(attack.getPower()*stab))/(pkmnEnnemi.getDefense()*50)*factor;
-          if(pkmnEnnemiHP <= 0)
-              System.out.println("notify1");
-        }
-        else{
-          pkmnChoisiHP -= ((50*0.4+2)*source.getAttack()*(attack.getPower()*stab))/(pkmnChoisi.getDefense()*50)*factor;
-          if(pkmnChoisiHP <= 0)
-              System.out.println("notify2");
+        double stab = (source.getType() == attack.getType() ? 1.0 : 1.5);
+        double factor = source.getType().getVulnerabilityFactor(attack.getType());
+        if (source == chosenPkmn) {
+            pkmnEnnemiHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack.getPower() * stab)) / (pkmnEnnemi.getDefense() * 50) * factor;
+            if (pkmnEnnemiHP <= 0) {
+                System.out.println("PKMN ennemi KO !!");
+                match.setWinner(chosenPkmn);
+                synchronized(match){
+                    match.notify();
+                }
+            }
+        } else {
+            pkmnChoisiHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack.getPower() * stab)) / (chosenPkmn.getDefense() * 50) * factor;
+            if (pkmnChoisiHP <= 0) {
+                System.out.println("T'es KO !! ");
+                match.setWinner(chosenPkmn);
+                synchronized(match){
+                    match.notify();
+                }
+            }
+
         }
     }
 
     public Pokemon getPokemonCourrant() {
-        return pkmnChoisi;
+        return chosenPkmn;
     }
 
     public Pokemon getPokemonEnnemi() {
         return pkmnEnnemi;
     }
-    
-    
+
 }

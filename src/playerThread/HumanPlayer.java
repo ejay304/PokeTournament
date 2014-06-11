@@ -31,7 +31,7 @@ public class HumanPlayer extends Player {
     public void run() {
         while(getMediator().getMatch().getWinner() == null){
             synchronized (getMediator()) {
-                if (!getMediator().canIPlay()) {
+                if (!getMediator().canIPlay(this.getPokemon())) {
                     try {
                         this.wait();
                     } catch (InterruptedException ex) {}

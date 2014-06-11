@@ -40,7 +40,10 @@ public class FightMediator extends Observable implements Mediator{
         this.pkmnEnnemi.setMediator(this);
     }
     
-    public boolean canIPlay(){
+    public boolean canIPlay(Pokemon pokemon){
+        //if turn...
+        //wait
+        //notify
         return true;
     }
     

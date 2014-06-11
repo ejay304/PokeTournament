@@ -5,11 +5,16 @@
  */
 package poketournament;
 
+import mediator.FightMediator;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import view.FightView;
+import playerThread.AiPlayer;
+import playerThread.HumanPlayer;
+import playerThread.Player;
+import view.player.AiView;
+import view.player.HumanView;
 
 /**
  *
@@ -20,18 +25,26 @@ public class Match extends Observable implements Runnable, Observer {
     private final Pokemon pkmn1;
     private final Pokemon pkmn2;
     private final Pokemon chosenPkmn;
-    private FightView fightView;
+    private final Pokemon ennemyPkmn;
+    private HumanView humanView;
+    private AiView aiView;
     private Pokemon winner;
     private Boolean autoWin;
-    private Fight fight;
-
+    private FightMediator fight;
+    private Player player1;
+    private Player player2;
+    
     public Match(Pokemon pkmn1, Pokemon pkmn2, Boolean autoWin, Pokemon chosenPkmn) {
         this.pkmn1 = pkmn1;
         this.pkmn2 = pkmn2;
         this.chosenPkmn = chosenPkmn;
+        if(chosenPkmn == pkmn1)
+            ennemyPkmn = pkmn2;
+        else
+            ennemyPkmn = pkmn1;
+        
         this.autoWin = autoWin;
         synchronized(this){
-            System.out.println("Autowin = " + autoWin);
             if (autoWin) {
                 setWinner(pkmn1);
             }
@@ -41,9 +54,15 @@ public class Match extends Observable implements Runnable, Observer {
     }
 
     public void start() {
-        fight = new Fight(this, chosenPkmn);
+        fight = new FightMediator(this, chosenPkmn);
         fight.addObserver(this);
-        fightView = new FightView(fight);
+        
+        player1 = new HumanPlayer(fight, chosenPkmn, ennemyPkmn);
+        player2 = new AiPlayer(fight, ennemyPkmn, chosenPkmn);
+  
+        humanView = new HumanView((HumanPlayer)player1);
+        aiView = new AiView((AiPlayer)player2);
+    
     }
 
     public Pokemon getWinner() {
@@ -64,25 +83,26 @@ public class Match extends Observable implements Runnable, Observer {
 
     @Override
     public void run() {
-        System.out.println("Test");
-        System.out.println("winner = " + getWinner());
         while (getWinner() == null) {
             synchronized (this) {
                 try {
-                    System.out.println("Test2");
+                    System.out.println("Attente de resultat pour le match " +
+                                pkmn1.getName() + " vs " + pkmn2.getName());
                     wait();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Match.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
+        System.out.println("[" + pkmn1.getName() + " vs " + pkmn2.getName()
+                            + ": winner = " + getWinner().getName()+"]");
 
         setChanged();
         notifyObservers();
 
         if(!autoWin)
          //TODO MESSAGE de fin
-         fightView.dispose();
+         humanView.close();
     }
 
     @Override

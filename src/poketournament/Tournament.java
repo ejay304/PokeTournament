@@ -97,7 +97,7 @@ public class Tournament extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("Trolololo");
+        System.out.println("Mise a jour etat tournoi recu");
 
         if (--cptMatch == 0) {
             tour--;
@@ -109,6 +109,7 @@ public class Tournament extends Observable implements Observer {
                     demi();
                     break;
             }
+            System.out.println("------On passe au tour " +  tour);
             setChanged();
             notifyObservers();
         }

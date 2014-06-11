@@ -146,6 +146,7 @@ public class TournamentView extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("Mise a jour tournamentview a faire");
         if (tournament.getMatches() != null) {
             for (final Match match : tournament.getMatches()) {
 
@@ -154,7 +155,8 @@ public class TournamentView extends JFrame implements Observer {
                 this.paintMatch(pkmn1, pkmn2, match);
             }
         } else {
-            paintPokemon(, null);
+            //TODO:???
+            //paintPokemon(, null);
         }
     }
 

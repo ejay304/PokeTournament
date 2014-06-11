@@ -1,5 +1,6 @@
 package poketournament;
 
+import mediator.FightMediator;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +20,7 @@ public class Pokemon{
     private int hp;
     private int attack;
     private ArrayList<Attack> skills;
-    private Fight mediator;
+    private FightMediator mediator;
     private int defense;
     private int speed;
     private Status status;
@@ -35,7 +36,7 @@ public class Pokemon{
         Pokemon.pokemons.add(this);
     }
     
-    public void setMediator(Fight fight){
+    public void setMediator(FightMediator fight){
         this.mediator = fight;
     }
 

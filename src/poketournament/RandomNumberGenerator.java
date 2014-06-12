@@ -22,7 +22,7 @@ public class RandomNumberGenerator {
 	 * 
 	 * @return l'instance du générateur
 	 */
-	public RandomNumberGenerator getInstance() {
+	public static RandomNumberGenerator getInstance() {
 		if (instance == null) {
 			instance = new RandomNumberGenerator();
 		}
@@ -38,6 +38,6 @@ public class RandomNumberGenerator {
 	 * @return la valeur aléatoire générée
 	 */
 	public int getRandomNumber(int max) {
-		return randomNumberGenerator.nextInt();
+		return randomNumberGenerator.nextInt(max);
 	}
 }

@@ -57,10 +57,10 @@ public class PokeTournament {
 				.setSkillList(skills);
 		
 		skills.clear();
-		skills.add(new Attack("Lame roc", 110, 90, Type.getType("Roche")));
+		skills.add(new Attack("Lame roc", 110, 85, Type.getType("Roche")));
 		skills.add(Attack.getAttack("Séisme"));
 		skills.add(new Attack("Marto-poing", 80, 100, Type.getType("Combat")));
-		skills.add(new Attack("Mégacorne", 110, 90, Type.getType("Insecte")));
+		skills.add(new Attack("Mégacorne", 110, 85, Type.getType("Insecte")));
 		new Pokemon("Rhinoferos", Type.getType("Roche"), 212, 182, 172, 92)
 				.setSkillList(skills);
 		
@@ -81,7 +81,7 @@ public class PokeTournament {
 				.setSkillList(skills);
 		
 		skills.clear();
-		skills.add(new Attack("Colère", 110, 90, Type.getType("Dragon")));
+		skills.add(new Attack("Colère", 110, 85, Type.getType("Dragon")));
 		skills.add(Attack.getAttack("Cru-aile"));
 		skills.add(Attack.getAttack("Surf"));
 		skills.add(Attack.getAttack("Lance-flamme"));

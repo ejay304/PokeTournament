@@ -40,4 +40,13 @@ public class RandomNumberGenerator {
 	public int getRandomNumber(int max) {
 		return randomNumberGenerator.nextInt(max);
 	}
+
+	/**
+	 * Récupère un booléen aléatoire.
+	 * 
+	 * @return valeur du booléen aléatoire
+	 */
+	public boolean getRandomBoolean() {
+		return randomNumberGenerator.nextBoolean();
+	}
 }

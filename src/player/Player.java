@@ -1,6 +1,10 @@
-package playerThread;
+package player;
 
+import config.Constante;
+import config.Constante.*;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mediator.Mediator;
 import poketournament.Attack;
 import poketournament.Pokemon;
@@ -14,28 +18,38 @@ import poketournament.Pokemon;
  *
  * @author admin
  */
-public abstract class Player extends Observable implements Runnable {
+public abstract class Player extends Observable {
 
     private Pokemon own;
     private Pokemon ennemy;
     private String message;
     private Mediator mediator;
+    private int action;
+
 
     protected Player(Mediator mediator, Pokemon own, Pokemon ennemy) {
         this.mediator = mediator;
         this.own = own;
         this.ennemy = ennemy;
-        new Thread(this).start();
     }
 
     public Pokemon getPokemon() {
         return own;
     }
+    
+    public void setActionCode(int code){
+        action = code;
+        setChanged();
+        notifyObservers();
+    }
+    public String getMessage(){
+        return this.message;
+    }
 
     public Mediator getMediator(){
         return mediator;
     }
-    public abstract Attack selectAttack();
+    public abstract void selectAttack();
 
     public void displayMessage(String message){
         this.message = message;
@@ -45,6 +59,12 @@ public abstract class Player extends Observable implements Runnable {
 
     public Pokemon getEnnemy() {
         return ennemy;
+    }
+
+    public abstract void setAttackSelected(Attack attack);
+
+    public int getActionCode() {
+        return this.action;
     }
 
 }

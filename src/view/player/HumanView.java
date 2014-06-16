@@ -5,18 +5,22 @@
  */
 package view.player;
 
+import config.Constante;
 import static config.Constante.*;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import playerThread.HumanPlayer;
+import player.HumanPlayer;
+import player.Player;
 import poketournament.Attack;
 
 /**
@@ -26,6 +30,14 @@ import poketournament.Attack;
 public class HumanView extends PlayerView {
 
     private JFrame frame;
+    private final JPanel panelAttacks;
+    private final JPanel panelMessage;
+    private final JPanel panelOwn;
+    private final JPanel panelEnnemy;
+    private final JLabel messageLabel;
+    private final JButton btnClose;
+    private final JLabel labelEnnemyHP;
+    private final JLabel labelOwnHP;
 
     public HumanView(HumanPlayer player) {
         super(player);
@@ -40,9 +52,18 @@ public class HumanView extends PlayerView {
         frame.setResizable(false);
         frame.setVisible(true);
 
-        frame.add(new JPanel() {
+        btnClose = new JButton("OK");
+        btnClose.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                frame.dispose();
+            }
+        });
+        labelEnnemyHP = new JLabel(Integer.toString(getPlayer().getEnnemy().getHp()));
+        labelOwnHP = new JLabel(Integer.toString(getPlayer().getPokemon().getHp()));
+        panelEnnemy = new JPanel() {
             {
-                setSize(90, 85);
+                setSize(80, 100);
                 setLocation(new Point(0, 200));
                 setOpaque(false);
 
@@ -52,12 +73,14 @@ public class HumanView extends PlayerView {
                         getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
 
                 this.add(new JLabel(image));
-            }
-        });
+                this.add(labelOwnHP);
 
-        frame.add(new JPanel() {
+            }
+        };
+
+        panelOwn = new JPanel() {
             {
-                setSize(90, 85);
+                setSize(80, 100);
                 setOpaque(false);
                 setLocation(new Point(400, 0));
 
@@ -66,11 +89,12 @@ public class HumanView extends PlayerView {
                                         RESSOURCES + getPlayer().getEnnemy().getName() + ".png")).
                         getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
                 this.add(new JLabel(image));
+                this.add(labelEnnemyHP);
             }
 
-        });
+        };
 
-        frame.add(new JPanel() {
+        panelAttacks = new JPanel() {
             {
                 setSize(200, 100);
                 setOpaque(false);
@@ -82,23 +106,77 @@ public class HumanView extends PlayerView {
                     btn.addActionListener(new ActionListener() {
 
                         public void actionPerformed(ActionEvent ae) {
-                            getPlayer().getPokemon().doAttack(attack);
+                            synchronized (getPlayer()) {
+                                getPlayer().setAttackSelected(attack);
+                                getPlayer().notify();
+                            }
                             HumanView.this.frame.repaint();
                         }
                     });
                     this.add(btn);
                 }
             }
-        }
-        );
-        
+        };
+
+        messageLabel = new JLabel();
+
+        panelMessage = new JPanel() {
+            {
+                setSize(400, 100);
+                setOpaque(false);
+                setLocation(new Point(20, 150));
+                add(messageLabel);
+            }
+        };
+
+        frame.add(panelEnnemy);
+        frame.add(panelOwn);
+
+        frame.add(panelAttacks);
+        frame.add(panelMessage);
+        panelMessage.setVisible(false);
+        panelAttacks.setVisible(false);
+
         System.out.println("{----HumanView Started----}");
 
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("{HumanView - mise a jour a faire...}");
+        //force une pause entre les différents messages
+        try {
+            Thread.sleep(Constante.TIME_SLEEP_BETWEEN_ACTION);
+        } catch (InterruptedException ex) {
+        }
+        int hpEnnemy = getPlayer().getMediator().getHPForPokemon(getPlayer().getEnnemy());
+        int hpOwn = getPlayer().getMediator().getHPForPokemon(getPlayer().getPokemon());
+
+        labelOwnHP.setText(Integer.toString(hpOwn));
+        labelEnnemyHP.setText(Integer.toString(hpEnnemy));
+        switch (getPlayer().getActionCode()) {
+            case SELECT_CODE:
+                panelAttacks.setVisible(true);
+                panelMessage.setVisible(false);
+                break;
+            case DEFEAT_CODE:
+                messageLabel.setText("Défaite");
+                panelMessage.add(btnClose);
+                panelAttacks.setVisible(false);
+                panelMessage.setVisible(true);
+                break;
+            case VICTORY_CODE:
+                messageLabel.setText("Victoire");
+                panelMessage.add(btnClose);
+                panelAttacks.setVisible(false);
+                panelMessage.setVisible(true);
+                break;
+            default:
+            case MESSAGE_CODE:
+                messageLabel.setText(getPlayer().getMessage());
+                panelAttacks.setVisible(false);
+                panelMessage.setVisible(true);
+                break;
+        }
     }
 
     public void close() {

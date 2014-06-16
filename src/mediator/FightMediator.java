@@ -6,108 +6,169 @@
 package mediator;
 
 import java.util.Observable;
+import player.AiPlayer;
+import player.HumanPlayer;
+import player.Player;
 import poketournament.Attack;
 import poketournament.Match;
 import poketournament.Pokemon;
+import view.player.AiView;
+import view.player.HumanView;
+import config.Constante;
 
 /**
- * 
+ *
  * @author Fabio
  */
-public class FightMediator extends Observable implements Mediator {
+public class FightMediator extends Observable implements Mediator, Runnable {
 
-	private final Match match;
-	private final Pokemon chosenPkmn;
-	private final Pokemon pkmnEnnemi;
-	private int pkmnChoisiHP;
-	private int pkmnEnnemiHP;
+    private final Match match;
+    private final Pokemon chosenPkmn;
+    private final Pokemon ennemyPkmn;
+    private int chosenPkmnHP;
+    private int ennemyPkmnHP;
+    private final HumanView humanView;
+    private final AiView aiView;
+    private final Player player1;
+    private final Player player2;
+    private int turn;
 
-	public FightMediator(Match match, Pokemon chosenPkmn) {
-		this.match = match;
+    public FightMediator(Match match, Pokemon chosenPkmn) {
+        this.match = match;
 
-		if (this.match.getPkmn1() == chosenPkmn) {
-			this.chosenPkmn = chosenPkmn;
-			this.pkmnEnnemi = this.match.getPkmn2();
-		} else {
-			this.pkmnEnnemi = this.match.getPkmn1();
-			this.chosenPkmn = chosenPkmn;
-		}
+        if (this.match.getPkmn1() == chosenPkmn) {
+            this.chosenPkmn = chosenPkmn;
+            this.ennemyPkmn = this.match.getPkmn2();
+        } else {
+            this.ennemyPkmn = this.match.getPkmn1();
+            this.chosenPkmn = chosenPkmn;
+        }
 
-		pkmnChoisiHP = chosenPkmn.getHp();
-		pkmnEnnemiHP = pkmnEnnemi.getHp();
+        chosenPkmnHP = chosenPkmn.getHp();
+        ennemyPkmnHP = ennemyPkmn.getHp();
 
-		this.chosenPkmn.setMediator(this);
-		this.pkmnEnnemi.setMediator(this);
-	}
+        this.chosenPkmn.setMediator(this);
+        this.ennemyPkmn.setMediator(this);
 
-	public boolean canIPlay(Pokemon pokemon) {
-		// if turn...
-		// wait
-		// notify
-		return true;
-	}
+        player1 = new HumanPlayer(this, chosenPkmn, ennemyPkmn);
+        player2 = new AiPlayer(this, ennemyPkmn, chosenPkmn);
 
-	public Match getMatch() {
-		return match;
-	}
+        humanView = new HumanView((HumanPlayer) player1);
+        aiView = new AiView((AiPlayer) player2);
+        
+        turn = ((chosenPkmn == match.getPkmn1())?0:1);
 
-	// c.f. : http://www.pokepedia.fr/index.php/Calcul_des_d%C3%A9g%C3%A2ts
-	public void attack(Pokemon source, Attack attack) {
-		double stab = (source.getType() == attack.getType() ? 1.5 : 1.0);
-		double factor = 1;
-		if (source == chosenPkmn) {
-			System.out.println("/" + source.getName() + " attaque "
-					+ pkmnEnnemi.getName() + " avec " + attack.getName());
-			factor = pkmnEnnemi.getType().getVulnerabilityFactor(
-					attack.getType());
-			// Gestion de la précision de l'attaque
-			if (attack.doHit()) {
-				pkmnEnnemiHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
-						.getPower() * stab))
-						/ (pkmnEnnemi.getDefense() * 50)
-						* factor;
-			} else {
-				System.out.println("L'attaque échoue!");
-			}
-			if (pkmnEnnemiHP <= 0) {
-				System.out.println("PKMN ennemi KO !!");
-				match.setWinner(chosenPkmn);
-				synchronized (match) {
-					match.notify();
-				}
-			}
-		} else {
-			System.out.println("/" + pkmnEnnemi.getName() + " attaque "
-					+ source + " avec " + attack.getName());
-			factor = chosenPkmn.getType().getVulnerabilityFactor(
-					attack.getType());
-			// Gestion de la précision de l'attaque
-			if (attack.doHit()) {
-				pkmnChoisiHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
-						.getPower() * stab))
-						/ (chosenPkmn.getDefense() * 50)
-						* factor;
-			} else {
-				System.out.println("L'attaque échoue!");
-			}
-			if (pkmnChoisiHP <= 0) {
-				System.out.println("T'es KO !! ");
-				match.setWinner(chosenPkmn);
-				synchronized (match) {
-					match.notify();
-				}
-			}
+        new Thread(this).start();
+    }
 
-		}
-		System.out.println("stab:" + stab + "effectiveness:" + factor);
-	}
+    public Match getMatch() {
+        return match;
+    }
 
-	public Pokemon getPokemonCourrant() {
-		return chosenPkmn;
-	}
+    // c.f. : http://www.pokepedia.fr/index.php/Calcul_des_d%C3%A9g%C3%A2ts
+    public void attack(Pokemon source, Attack attack) {
+        double stab = (source.getType() == attack.getType() ? 1.5 : 1.0);
+        double factor = 1;
+        if (source == chosenPkmn) {
+            sendMessageToPlayers(source.getName() + " attaque "
+                    + ennemyPkmn.getName() + " avec " + attack.getName());
 
-	public Pokemon getPokemonEnnemi() {
-		return pkmnEnnemi;
-	}
+            factor = ennemyPkmn.getType().getVulnerabilityFactor(
+                    attack.getType());
+            // Gestion de la précision de l'attaque
+            if (attack.doHit()) {
+                ennemyPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
+                        .getPower() * stab))
+                        / (ennemyPkmn.getDefense() * 50)
+                        * factor;
+            } else {
+                sendMessageToPlayers("L'attaque a échoue!");
+
+            }
+            if (ennemyPkmnHP <= 0) {
+                ennemyPkmnHP = 0;
+                sendMessageToPlayers(ennemyPkmn.getName() + " KO !!");
+
+                match.setWinner(chosenPkmn);
+            }
+        } else {
+            sendMessageToPlayers(ennemyPkmn.getName() + " attaque "
+                    + chosenPkmn.getName() + " avec " + attack.getName());
+
+            factor = chosenPkmn.getType().getVulnerabilityFactor(
+                    attack.getType());
+            // Gestion de la précision de l'attaque
+            if (attack.doHit()) {
+                chosenPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
+                        .getPower() * stab))
+                        / (chosenPkmn.getDefense() * 50)
+                        * factor;
+            } else {
+                sendMessageToPlayers("L'attaque échoue!");
+            }
+            if (chosenPkmnHP <= 0) {
+                chosenPkmnHP = 0;
+                sendMessageToPlayers(chosenPkmn.getName() + " est KO !! ");
+                match.setWinner(ennemyPkmn);
+            }
+        }
+        System.out.println("stab:" + stab + " effectiveness:" + factor);
+    }
+
+    private void sendMessageToPlayers(String message) {
+        player1.setActionCode(Constante.MESSAGE_CODE);
+        player2.setActionCode(Constante.MESSAGE_CODE);
+        player1.displayMessage(message);
+        player2.displayMessage(message);
+
+    }
+
+    public Pokemon getPokemonCourrant() {
+        return chosenPkmn;
+    }
+
+    public Pokemon getPokemonEnnemi() {
+        return ennemyPkmn;
+    }
+
+    @Override
+    public void run() {
+        while (this.match.getWinner() == null) {
+            if (this.turn == 0) {
+
+                player1.setActionCode(Constante.SELECT_CODE);
+
+                player1.selectAttack();
+                turn = 1;
+                player2.setActionCode(Constante.MESSAGE_CODE);
+            } else {
+                player2.setActionCode(Constante.SELECT_CODE);
+                player2.selectAttack();
+                turn = 0;
+                player1.setActionCode(Constante.MESSAGE_CODE);
+            }
+        }
+        //Envoi du résultat aux joueurs
+        if (match.getWinner() == player1.getPokemon()) {
+            player1.setActionCode(Constante.VICTORY_CODE);
+            player2.setActionCode(Constante.DEFEAT_CODE);
+        } else {
+            player1.setActionCode(Constante.DEFEAT_CODE);
+            player2.setActionCode(Constante.VICTORY_CODE);
+        }
+
+        synchronized (match) {
+            match.notify();
+        }
+    }
+
+    @Override
+    public int getHPForPokemon(Pokemon pokemon) {
+        if (this.chosenPkmn == pokemon) {
+            return chosenPkmnHP;
+        } else {
+            return ennemyPkmnHP;
+        }
+    }
 
 }

@@ -7,7 +7,7 @@
 package view.player;
 
 import java.util.Observer;
-import playerThread.Player;
+import player.Player;
 
 /**
  *

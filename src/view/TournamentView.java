@@ -41,14 +41,14 @@ public class TournamentView extends JFrame implements Observer {
             this.paintMatch(pkmn1, pkmn2, match);
 
         }
-
         tournament.addObserver(this);
 
+
     }
-    
-    public void paintPokemon(final Pokemon pkmn, final Match match){
-    
-    this.add(new JPanel() {
+
+    public void paintPokemon(final Pokemon pkmn, final Match match) {
+
+        this.add(new JPanel() {
             {
                 setSize(90, 85);
                 setLocation(BOXES[i]);
@@ -111,7 +111,6 @@ public class TournamentView extends JFrame implements Observer {
         });
 
         i++;
-
         this.add(new JPanel() {
             {
                 setSize(90, 85);
@@ -146,9 +145,9 @@ public class TournamentView extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("Mise a jour tournamentview a faire");
         if (tournament.getMatches() != null) {
             for (final Match match : tournament.getMatches()) {
+                System.out.println("print " + match.getPkmn1().getName() + " " + match.getPkmn2().getName());
 
                 final Pokemon pkmn1 = match.getPkmn1();
                 final Pokemon pkmn2 = match.getPkmn2();

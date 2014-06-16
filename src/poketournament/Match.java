@@ -10,11 +10,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import playerThread.AiPlayer;
-import playerThread.HumanPlayer;
-import playerThread.Player;
-import view.player.AiView;
-import view.player.HumanView;
+
 
 /**
  * 
@@ -26,13 +22,11 @@ public class Match extends Observable implements Runnable, Observer {
 	private final Pokemon pkmn2;
 	private final Pokemon chosenPkmn;
 	private final Pokemon ennemyPkmn;
-	private HumanView humanView;
-	private AiView aiView;
+
 	private Pokemon winner;
 	private Boolean autoWin;
 	private FightMediator fight;
-	private Player player1;
-	private Player player2;
+
 
 	public Match(Pokemon pkmn1, Pokemon pkmn2, Boolean autoWin,
 			Pokemon chosenPkmn) {
@@ -62,17 +56,10 @@ public class Match extends Observable implements Runnable, Observer {
 	public void start() {
 		fight = new FightMediator(this, chosenPkmn);
 		fight.addObserver(this);
-
-		player1 = new HumanPlayer(fight, chosenPkmn, ennemyPkmn);
-		player2 = new AiPlayer(fight, ennemyPkmn, chosenPkmn);
-
-		humanView = new HumanView((HumanPlayer) player1);
-		aiView = new AiView((AiPlayer) player2);
-
 	}
 
 	public Pokemon getWinner() {
-		return winner;
+            return winner;
 	}
 
 	public void setWinner(Pokemon pkmn) {
@@ -106,10 +93,6 @@ public class Match extends Observable implements Runnable, Observer {
 
 		setChanged();
 		notifyObservers();
-
-		if (!autoWin)
-			// TODO MESSAGE de fin
-			humanView.close();
 	}
 
 	@Override

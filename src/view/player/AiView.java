@@ -8,7 +8,7 @@ package view.player;
 
 import java.util.Observable;
 import java.util.Observer;
-import playerThread.AiPlayer;
+import player.AiPlayer;
 
 /**
  *
@@ -23,6 +23,5 @@ public class AiView extends PlayerView{
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("{AIView - mise a jour a faire...}");
     }
 }

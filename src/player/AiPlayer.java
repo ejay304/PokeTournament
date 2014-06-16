@@ -3,32 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package player;
 
-package playerThread;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import poketournament.Attack;
 import mediator.FightMediator;
 import poketournament.Pokemon;
+import poketournament.RandomNumberGenerator;
 
 /**
  *
  * @author admin
  */
-public class AiPlayer extends Player{
-    
+public class AiPlayer extends Player {
+
     public AiPlayer(FightMediator fight, Pokemon chosenPkmn, Pokemon ennemyPkmn) {
         super(fight, chosenPkmn, ennemyPkmn);
         System.out.println("%AI Player thread started%");
-        
+
     }
 
     @Override
-    public Attack selectAttack() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void selectAttack() {
+        this.getPokemon().doAttack(this.getPokemon().getSkillList().get(RandomNumberGenerator.getInstance().getRandomNumber(3)));
     }
 
+
     @Override
-    public void run() {
-        System.out.println("%AIPlayer thread - should be waiting turn here%");
+    public void setAttackSelected(Attack attack) {
     }
 }

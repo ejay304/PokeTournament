@@ -24,6 +24,7 @@ public class Pokemon {
 	private int defense;
 	private int speed;
 	private Status status;
+	private boolean isIncapacitated;
 
 	public Pokemon(String name, Type type, int hp, int attack, int defense,
 			int speed) {
@@ -34,6 +35,7 @@ public class Pokemon {
 		this.defense = defense;
 		this.speed = speed;
 		this.status = Status.EN_FORME;
+		isIncapacitated = false;
 		Pokemon.pokemons.add(this);
 	}
 
@@ -47,14 +49,15 @@ public class Pokemon {
 
 	public void doAttack(Attack attack) {
 		int statusFactor;
-		
+
 		mediator.attack(this, attack);
-		if(attack.getStatus() != null) {
-			statusFactor = RandomNumberGenerator.getInstance().getRandomNumber(3);
-			if(statusFactor == 0) {
+		if (attack.getStatus() != null) {
+			statusFactor = RandomNumberGenerator.getInstance().getRandomNumber(
+					3);
+			if (statusFactor == 0) {
 				mediator.changeStatus(this, attack.getStatus());
 			}
-				
+
 		}
 	}
 
@@ -88,14 +91,20 @@ public class Pokemon {
 
 	public void doStatus() {
 		switch (status) {
-		
+
 		case PARALYSE:
 		case GELE:
-			RandomNumberGenerator.getInstance().getRandomNumber(3);
+			if (RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
+				isIncapacitated = true;
+			}
+
 			break;
 
 		case POISON:
 		case BRULE:
+			if (RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
+
+			}
 			break;
 
 		}
@@ -104,9 +113,8 @@ public class Pokemon {
 	public void setStatus(Status newStatus) {
 		status = newStatus;
 	}
-	
+
 	private void restoreStatus() {
 		this.status = Status.EN_FORME;
 	}
 }
- 

@@ -172,11 +172,11 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 		while (this.match.getWinner() == null) {
 
 			if (this.turn == 0) {
-
 				player1.setActionCode(Constante.SELECT_CODE);
 				player1.selectAttack();
 				turn = 1;
 				player2.setActionCode(Constante.MESSAGE_CODE);
+				
 			} else {
 
 				player2.setActionCode(Constante.SELECT_CODE);
@@ -184,6 +184,10 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 				turn = 0;
 				player1.setActionCode(Constante.MESSAGE_CODE);
 			}
+			// Fin du tour, gestion des statuts
+			ennemyPkmn.doStatus();
+			chosenPkmn.doStatus();
+			
 		}
 		// Envoi du résultat aux joueurs
 		if (match.getWinner() == player1.getPokemon()) {
@@ -196,6 +200,14 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 
 		synchronized (match) {
 			match.notify();
+		}
+	}
+	
+	public void statusDamage(Pokemon source) {
+		if(source.equals(chosenPkmn)) {
+			chosenPkmnHP -= (source.getHp()/8);
+		} else {
+			ennemyPkmnHP -= (source.getHp()/8);
 		}
 	}
 

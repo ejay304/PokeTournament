@@ -108,5 +108,5 @@ public class Pokemon {
 	private void restoreStatus() {
 		this.status = Status.EN_FORME;
 	}
-
 }
+ 

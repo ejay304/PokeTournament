@@ -94,7 +94,7 @@ public class Pokemon {
         skills.add(Attack.getAttack("Morsure"));
         skills.add(Attack.getAttack("Roulade"));
         skills.add(Attack.getAttack("Tacle lourd"));
-        new Pokemon("Ronflex", Type.getType("Normal"), 267, 162, 162, 82)
+        new Pokemon("Ronflex", Type.getType("Normal"), 67, 162, 162, 82)
                 .setSkillList(skills);
 
         skills.clear();

@@ -18,6 +18,7 @@ import java.awt.Point;
 public class Constante {
     
     public static final String RESSOURCES = "/ressources/";
+    public static final String RESSOURCES_TYPE = "/ressources/type/";
     public static final Point[] BOXES = new Point[15];
     public final static int SELECT_CODE = 0;
     public final static int MESSAGE_CODE = 1;

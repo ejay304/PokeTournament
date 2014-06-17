@@ -164,6 +164,7 @@ public class Pokemon {
             case GELE:
                 if (RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
                     isIncapacitated = true;
+                    System.out.println("paralysé");
                 }
 
                 break;

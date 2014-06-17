@@ -12,6 +12,7 @@ import player.Player;
 import poketournament.Attack;
 import poketournament.Match;
 import poketournament.Pokemon;
+import poketournament.RandomNumberGenerator;
 import poketournament.Status;
 import view.player.AiView;
 import view.player.HumanView;
@@ -101,19 +102,25 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 					ennemyPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
 							.getPower() * stab))
 							/ (ennemyPkmn.getDefense() * 50) * factor;
+					if(attack.getStatus() != null) {
+			    		if(RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
+			    			ennemyPkmn.setStatus(attack.getStatus());
+			    			sendMessageToPlayers(ennemyPkmn.toString() + " est " + attack.getStatus().toString());
+			    		}
+			    	}
 				} else {
 					sendMessageToPlayers("L'attaque a échoue!");
 
 				}
 				if (ennemyPkmnHP <= 0) {
 					ennemyPkmnHP = 0;
-					sendMessageToPlayers(ennemyPkmn.getName() + " KO !!");
+					sendMessageToPlayers(ennemyPkmn.toString() + " KO !!");
 
 					match.setWinner(chosenPkmn);
 				}
 			} else {
-				sendMessageToPlayers(ennemyPkmn.getName() + " attaque "
-						+ chosenPkmn.getName() + " avec " + attack.getName());
+				sendMessageToPlayers(ennemyPkmn.toString() + " attaque "
+						+ chosenPkmn.toString() + " avec " + attack.getName());
 
 				factor = chosenPkmn.getType().getVulnerabilityFactor(
 						attack.getType());
@@ -122,12 +129,18 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 					chosenPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
 							.getPower() * stab))
 							/ (chosenPkmn.getDefense() * 50) * factor;
+					if(attack.getStatus() != null) {
+			    		if(RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
+			    			chosenPkmn.setStatus(attack.getStatus());
+			    			sendMessageToPlayers(chosenPkmn.toString() + " est " + attack.getStatus().toString());
+			    		}
+			    	}
 				} else {
 					sendMessageToPlayers("L'attaque échoue!");
 				}
 				if (chosenPkmnHP <= 0) {
 					chosenPkmnHP = 0;
-					sendMessageToPlayers(chosenPkmn.getName() + " est KO !! ");
+					sendMessageToPlayers(chosenPkmn.toString() + " est KO !! ");
 					match.setWinner(ennemyPkmn);
 				}
 			}

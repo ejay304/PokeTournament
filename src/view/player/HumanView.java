@@ -57,7 +57,7 @@ public class HumanView extends PlayerView {
         //setDefaultCloseOperation(EXIT_ON_CLOSE);    
         frame.setLayout(null);
         frame.setTitle("Combat - Vue player");
-        frame.setSize(500, 400);
+        frame.setSize(700, 400);
         frame.setResizable(false);
         frame.setVisible(true);
 
@@ -89,9 +89,14 @@ public class HumanView extends PlayerView {
         progressBarHealthEnnemy.setForeground(Color.GREEN);
         
         panelAttacks = new JPanel() {
-            {
+            {                
                 for (final Attack attack : getPlayer().getPokemon().getSkillList()) {
-                    JButton btn = new JButton(attack.getName());
+                    
+                    JPanel panelDataAttack = new JPanel();
+                    
+                    JLabel labelNameAttack = new JLabel(attack.getName());
+                    JButton btn = new JButton();
+                    
                     btn.setSize(20, 200);
                     btn.addActionListener(new ActionListener() {
 
@@ -103,6 +108,15 @@ public class HumanView extends PlayerView {
                             HumanView.this.frame.repaint();
                         }
                     });
+                    
+                    ImageIcon image = new ImageIcon(
+                        new ImageIcon(getClass().getResource(
+                                      RESSOURCES_TYPE + attack.getType() + ".png")).getImage());
+
+                    panelDataAttack.add(new JLabel(image));
+                    panelDataAttack.add(labelNameAttack);
+                    
+                    btn.add(panelDataAttack);
                     this.add(btn);
                 }
             }

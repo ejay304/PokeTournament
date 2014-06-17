@@ -6,8 +6,8 @@ import java.util.ArrayList;
 /**
  * Pokemon
  * 
- * @since   27.05.2014
- * @author  Alain FRESCO
+ * @since 27.05.2014
+ * @author Alain FRESCO
  * @version 1.0
  */
 public class Pokemon{
@@ -142,5 +142,23 @@ public class Pokemon{
     public int getSpeed() {
         return speed;
     }
- 
+    public void doStatus() {
+		switch (status) {
+		
+		case PARALYSE:
+		case GELE:
+			
+			break;
+
+		case POISON:
+		case BRULE:
+			break;
+
+		}
+	}
+
+	private void restoreStatus() {
+		this.status = Status.EN_FORME;
+	}
 }
+ 

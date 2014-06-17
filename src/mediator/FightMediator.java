@@ -86,50 +86,56 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 	public void attack(Pokemon source, Attack attack) {
 		double stab = (source.getType() == attack.getType() ? 1.5 : 1.0);
 		double factor = 1;
-		if (source == chosenPkmn) {
-			sendMessageToPlayers(source.getName() + " attaque "
-					+ ennemyPkmn.getName() + " avec " + attack.getName());
 
-			factor = ennemyPkmn.getType().getVulnerabilityFactor(
-					attack.getType());
-			// Gestion de la précision de l'attaque
-			if (attack.doHit()) {
-				ennemyPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
-						.getPower() * stab))
-						/ (ennemyPkmn.getDefense() * 50)
-						* factor;
+		// N'attaque pas si paralysé ou gelé (1/4 de chance par tour sous statut)
+		if (!source.isIncapacitated()) {
+			// Si la source est le pokemon choisi
+			if (source == chosenPkmn) {
+				sendMessageToPlayers(source.getName() + " attaque "
+						+ ennemyPkmn.getName() + " avec " + attack.getName());
+
+				factor = ennemyPkmn.getType().getVulnerabilityFactor(
+						attack.getType());
+				// Gestion de la précision de l'attaque
+				if (attack.doHit()) {
+					ennemyPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
+							.getPower() * stab))
+							/ (ennemyPkmn.getDefense() * 50) * factor;
+				} else {
+					sendMessageToPlayers("L'attaque a échoue!");
+
+				}
+				if (ennemyPkmnHP <= 0) {
+					ennemyPkmnHP = 0;
+					sendMessageToPlayers(ennemyPkmn.getName() + " KO !!");
+
+					match.setWinner(chosenPkmn);
+				}
 			} else {
-				sendMessageToPlayers("L'attaque a échoue!");
+				sendMessageToPlayers(ennemyPkmn.getName() + " attaque "
+						+ chosenPkmn.getName() + " avec " + attack.getName());
 
+				factor = chosenPkmn.getType().getVulnerabilityFactor(
+						attack.getType());
+				// Gestion de la précision de l'attaque
+				if (attack.doHit()) {
+					chosenPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
+							.getPower() * stab))
+							/ (chosenPkmn.getDefense() * 50) * factor;
+				} else {
+					sendMessageToPlayers("L'attaque échoue!");
+				}
+				if (chosenPkmnHP <= 0) {
+					chosenPkmnHP = 0;
+					sendMessageToPlayers(chosenPkmn.getName() + " est KO !! ");
+					match.setWinner(ennemyPkmn);
+				}
 			}
-			if (ennemyPkmnHP <= 0) {
-				ennemyPkmnHP = 0;
-				sendMessageToPlayers(ennemyPkmn.getName() + " KO !!");
-
-				match.setWinner(chosenPkmn);
-			}
+			System.out.println("stab:" + stab + " effectiveness:" + factor);
 		} else {
-			sendMessageToPlayers(ennemyPkmn.getName() + " attaque "
-					+ chosenPkmn.getName() + " avec " + attack.getName());
-
-			factor = chosenPkmn.getType().getVulnerabilityFactor(
-					attack.getType());
-			// Gestion de la précision de l'attaque
-			if (attack.doHit()) {
-				chosenPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
-						.getPower() * stab))
-						/ (chosenPkmn.getDefense() * 50)
-						* factor;
-			} else {
-				sendMessageToPlayers("L'attaque échoue!");
-			}
-			if (chosenPkmnHP <= 0) {
-				chosenPkmnHP = 0;
-				sendMessageToPlayers(chosenPkmn.getName() + " est KO !! ");
-				match.setWinner(ennemyPkmn);
-			}
+			sendMessageToPlayers(source.toString() + " est incapable d'attaquer!");
+			source.setCapacitated();
 		}
-		System.out.println("stab:" + stab + " effectiveness:" + factor);
 	}
 
 	private void sendMessageToPlayers(String message) {

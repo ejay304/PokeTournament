@@ -171,7 +171,7 @@ public class Pokemon {
             case POISON:
             case BRULE:
                 if (RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
-
+                	
                 }
                 break;
 
@@ -185,4 +185,19 @@ public class Pokemon {
     private void restoreStatus() {
         this.status = Status.EN_FORME;
     }
+    
+    public boolean isIncapacitated() {
+    	return isIncapacitated;
+    }
+    
+    public void setCapacitated() {
+    	isIncapacitated = false;
+    }
+
+	@Override
+	public String toString() {
+		return name;
+	}
+    
+    
 }

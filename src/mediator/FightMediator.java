@@ -56,8 +56,9 @@ public class FightMediator extends Observable implements Mediator, Runnable {
         humanView = new HumanView((HumanPlayer) player1);
         aiView = new AiView((AiPlayer) player2);
         
-        turn = ((chosenPkmn == match.getPkmn1())?0:1);
-
+        turn = ((chosenPkmn.getSpeed() >= match.getPkmn1().getSpeed())? 0 :1);
+        
+        
         new Thread(this).start();
     }
 

@@ -46,7 +46,16 @@ public class Pokemon {
 	}
 
 	public void doAttack(Attack attack) {
+		int statusFactor;
+		
 		mediator.attack(this, attack);
+		if(attack.getStatus() != null) {
+			statusFactor = RandomNumberGenerator.getInstance().getRandomNumber(3);
+			if(statusFactor == 0) {
+				mediator.changeStatus(this, attack.getStatus());
+			}
+				
+		}
 	}
 
 	public int getHp() {
@@ -82,7 +91,7 @@ public class Pokemon {
 		
 		case PARALYSE:
 		case GELE:
-			
+			RandomNumberGenerator.getInstance().getRandomNumber(3);
 			break;
 
 		case POISON:
@@ -92,6 +101,10 @@ public class Pokemon {
 		}
 	}
 
+	public void setStatus(Status newStatus) {
+		status = newStatus;
+	}
+	
 	private void restoreStatus() {
 		this.status = Status.EN_FORME;
 	}

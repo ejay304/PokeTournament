@@ -42,6 +42,7 @@ public class Tournament extends Observable implements Observer {
             case 2:
                 return matchesDemi;
             case 1:
+            case 0:
                 return matchFinal;
             default:
                 return null;

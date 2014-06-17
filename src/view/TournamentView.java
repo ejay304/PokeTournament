@@ -81,7 +81,6 @@ public class TournamentView extends JFrame implements Observer {
 
     public void paintMatch(final Pokemon pkmn1, final Pokemon pkmn2, final Match match) {
         paintPokemon(pkmn1, match);
-
         paintPokemon(pkmn2, match);
     }
 

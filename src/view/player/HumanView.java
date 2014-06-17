@@ -10,21 +10,18 @@ import static config.Constante.*;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.Normalizer;
 import java.util.Observable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.SwingConstants;
 import player.HumanPlayer;
-import player.Player;
 import poketournament.Attack;
 
 /**
@@ -44,7 +41,7 @@ public class HumanView extends PlayerView {
     private final JLabel labelOwnHP;
     private final JLabel labelEnnemyName;
     private final JLabel labelOwnName;
-    
+
     private final JProgressBar progressBarHealthOwn;
     private final JProgressBar progressBarHealthEnnemy;
 
@@ -68,35 +65,35 @@ public class HumanView extends PlayerView {
                 frame.dispose();
             }
         });
-        
+
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(3,1));
-        
-        labelEnnemyHP = new JLabel(Integer.toString(player.getMediator().getPokemonEnnemi().getHp()));
+        mainPanel.setLayout(new GridLayout(3, 1));
+
+        labelEnnemyHP = new JLabel(Integer.toString(player.getMediator().getEnnemyPokemon(getPlayer().getPokemon()).getHp()));
         labelOwnHP = new JLabel(Integer.toString(getPlayer().getPokemon().getHp()));
-        
-        labelEnnemyName = new JLabel(player.getMediator().getPokemonEnnemi().getName());
+
+        labelEnnemyName = new JLabel(player.getMediator().getEnnemyPokemon(getPlayer().getPokemon()).getName());
         labelOwnName = new JLabel(player.getPokemon().getName());
-        
+
         progressBarHealthOwn = new JProgressBar(0, 100);
         progressBarHealthOwn.setValue(100);
         progressBarHealthOwn.setStringPainted(true);
         progressBarHealthOwn.setForeground(Color.GREEN);
-        
+
         progressBarHealthEnnemy = new JProgressBar(0, 100);
         progressBarHealthEnnemy.setValue(100);
         progressBarHealthEnnemy.setStringPainted(true);
         progressBarHealthEnnemy.setForeground(Color.GREEN);
-        
+
         panelAttacks = new JPanel() {
-            {                
+            {
                 for (final Attack attack : getPlayer().getPokemon().getSkillList()) {
-                    
+
                     JPanel panelDataAttack = new JPanel();
-                    
+
                     JLabel labelNameAttack = new JLabel(attack.getName());
                     JButton btn = new JButton();
-                    
+
                     btn.setSize(20, 200);
                     btn.addActionListener(new ActionListener() {
 
@@ -108,20 +105,24 @@ public class HumanView extends PlayerView {
                             HumanView.this.frame.repaint();
                         }
                     });
-                    
+                    String typeNom = sansAccent(attack.getType().getName().toLowerCase());
+  
+                    System.out.println(RESSOURCES_TYPE + typeNom + ".png");
                     ImageIcon image = new ImageIcon(
-                        new ImageIcon(getClass().getResource(
-                                      RESSOURCES_TYPE + attack.getType() + ".png")).getImage());
+                            new ImageIcon(getClass().getResource(
+                                            RESSOURCES_TYPE
+                                            + typeNom
+                                            + ".png")).getImage());
 
                     panelDataAttack.add(new JLabel(image));
                     panelDataAttack.add(labelNameAttack);
-                    
+
                     btn.add(panelDataAttack);
                     this.add(btn);
                 }
             }
         };
-        
+
         panelOwn = new JPanel() {
             {
                 ImageIcon image = new ImageIcon(
@@ -141,7 +142,8 @@ public class HumanView extends PlayerView {
             {
                 ImageIcon image = new ImageIcon(
                         new ImageIcon(getClass().getResource(
-                                        RESSOURCES + getPlayer().getMediator().getPokemonEnnemi().getName() + ".png")).
+                                        RESSOURCES + getPlayer().getMediator().getEnnemyPokemon(getPlayer()
+                                                .getPokemon()).getName() + ".png")).
                         getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
                 this.add(new JLabel(image));
                 this.add(progressBarHealthEnnemy);
@@ -149,15 +151,15 @@ public class HumanView extends PlayerView {
                 this.add(labelEnnemyName);
             }
         };
-        
+
         labelMessage = new JLabel();
-        
-        panelMessage = new JPanel(){
+
+        panelMessage = new JPanel() {
             {
                 this.add(labelMessage);
             }
         };
-        
+
         mainPanel.add(panelEnnemy);
         mainPanel.add(panelMessage);
         mainPanel.add(panelOwn);
@@ -176,27 +178,31 @@ public class HumanView extends PlayerView {
             Thread.sleep(Constante.TIME_SLEEP_BETWEEN_ACTION);
         } catch (InterruptedException ex) {
         }
-        int hpEnnemy = getPlayer().getMediator().getHPForPokemon(getPlayer().getMediator().getPokemonEnnemi());
+        int hpEnnemy = getPlayer().getMediator().getHPForPokemon(getPlayer().getMediator().getEnnemyPokemon(getPlayer().getPokemon()));
         int hpOwn = getPlayer().getMediator().getHPForPokemon(getPlayer().getPokemon());
 
-        progressBarHealthOwn.setValue((int)((float)hpOwn / (float)getPlayer().getPokemon().getHp() * 100));
-        
+        progressBarHealthOwn.setValue((int) ((float) hpOwn / (float) getPlayer().getPokemon().getHp() * 100));
+
         System.out.println("------------------HP " + hpOwn);
         System.out.println("------------------HPF " + getPlayer().getPokemon().getHp());
-         
-        if(progressBarHealthOwn.getValue() <= 50)
-            if(progressBarHealthOwn.getValue() <= 20)
+
+        if (progressBarHealthOwn.getValue() <= 50) {
+            if (progressBarHealthOwn.getValue() <= 20) {
                 progressBarHealthOwn.setForeground(Color.RED);
-            else
+            } else {
                 progressBarHealthOwn.setForeground(Color.ORANGE);
-        
-        progressBarHealthEnnemy.setValue((int)((float)hpEnnemy / (float)getPlayer().getMediator().getPokemonEnnemi().getHp() * 100));
-        
-        if(progressBarHealthEnnemy.getValue() <= 50)
-            if(progressBarHealthEnnemy.getValue() <= 20)
+            }
+        }
+
+        progressBarHealthEnnemy.setValue((int) ((float) hpEnnemy / (float) getPlayer().getMediator().getEnnemyPokemon(getPlayer().getPokemon()).getHp() * 100));
+
+        if (progressBarHealthEnnemy.getValue() <= 50) {
+            if (progressBarHealthEnnemy.getValue() <= 20) {
                 progressBarHealthEnnemy.setForeground(Color.RED);
-            else
+            } else {
                 progressBarHealthEnnemy.setForeground(Color.ORANGE);
+            }
+        }
 
         labelOwnHP.setText(Integer.toString(hpOwn));
         labelEnnemyHP.setText(Integer.toString(hpEnnemy));
@@ -224,6 +230,13 @@ public class HumanView extends PlayerView {
                 panelMessage.setVisible(true);
                 break;
         }
+    }
+
+    private static String sansAccent(String s) {
+
+        String strTemp = Normalizer.normalize(s, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(strTemp).replaceAll("");
     }
 
     public void close() {

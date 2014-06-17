@@ -25,40 +25,39 @@ import config.Constante;
 public class FightMediator extends Observable implements Mediator, Runnable {
 
 	private final Match match;
-	private final Pokemon chosenPkmn;
-	private final Pokemon ennemyPkmn;
-	private int chosenPkmnHP;
-	private int ennemyPkmnHP;
+	private final Pokemon pkmn1;
+	private final Pokemon pkmn2;
+	private int pkmn1HP;
+	private int pkmn2HP;
 	private final HumanView humanView;
 	private final AiView aiView;
 	private final Player player1;
 	private final Player player2;
 	private int turn;
 
-	public FightMediator(Match match, Pokemon chosenPkmn) {
+	public FightMediator(Match match) {
 		this.match = match;
 
-		if (this.match.getPkmn1() == chosenPkmn) {
-			this.chosenPkmn = chosenPkmn;
-			this.ennemyPkmn = this.match.getPkmn2();
-		} else {
-			this.ennemyPkmn = this.match.getPkmn1();
-			this.chosenPkmn = chosenPkmn;
-		}
+		this.pkmn1 = match.getChosenPokemon();
+                
+                if(match.getPkmn1() == this.pkmn1)
+                    this.pkmn2 = match.getPkmn2();
+                else
+                    this.pkmn2 = match.getPkmn1();
+                
+		pkmn1HP = pkmn1.getHp();
+		pkmn2HP = pkmn2.getHp();
 
-		chosenPkmnHP = chosenPkmn.getHp();
-		ennemyPkmnHP = ennemyPkmn.getHp();
+		this.pkmn1.setMediator(this);
+		this.pkmn2.setMediator(this);
 
-		this.chosenPkmn.setMediator(this);
-		this.ennemyPkmn.setMediator(this);
-
-		player1 = new HumanPlayer(this, chosenPkmn);
-		player2 = new AiPlayer(this, ennemyPkmn);
+		player1 = new HumanPlayer(this, pkmn1);
+		player2 = new AiPlayer(this, pkmn2);
 
 		humanView = new HumanView((HumanPlayer) player1);
 		aiView = new AiView((AiPlayer) player2);
 
-		turn = ((chosenPkmn.getSpeed() >= match.getPkmn1().getSpeed()) ? 0 : 1);
+		turn = ((pkmn1.getSpeed() >= match.getPkmn1().getSpeed()) ? 0 : 1);
 
 		new Thread(this).start();
 	}
@@ -76,10 +75,10 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 	 *            Le nouveau statut
 	 */
 	public void changeStatus(Pokemon source, Status newStatus) {
-		if (source.equals(chosenPkmn)) {
-			ennemyPkmn.setStatus(newStatus);
+		if (source.equals(pkmn1)) {
+			pkmn2.setStatus(newStatus);
 		} else {
-			chosenPkmn.setStatus(newStatus);
+			pkmn1.setStatus(newStatus);
 		}
 	}
 
@@ -91,57 +90,57 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 		// N'attaque pas si paralysé ou gelé (1/4 de chance par tour sous statut)
 		if (!source.isIncapacitated()) {
 			// Si la source est le pokemon choisi
-			if (source == chosenPkmn) {
+			if (source == pkmn1) {
 				sendMessageToPlayers(source.getName() + " attaque "
-						+ ennemyPkmn.getName() + " avec " + attack.getName());
+						+ pkmn2.getName() + " avec " + attack.getName());
 
-				factor = ennemyPkmn.getType().getVulnerabilityFactor(
+				factor = pkmn2.getType().getVulnerabilityFactor(
 						attack.getType());
 				// Gestion de la précision de l'attaque
 				if (attack.doHit()) {
-					ennemyPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
+					pkmn2HP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
 							.getPower() * stab))
-							/ (ennemyPkmn.getDefense() * 50) * factor;
+							/ (pkmn2.getDefense() * 50) * factor;
 					if(attack.getStatus() != null) {
 			    		if(RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
-			    			ennemyPkmn.setStatus(attack.getStatus());
-			    			sendMessageToPlayers(ennemyPkmn.toString() + " est " + attack.getStatus().toString());
+			    			pkmn2.setStatus(attack.getStatus());
+			    			sendMessageToPlayers(pkmn2.toString() + " est " + attack.getStatus().toString());
 			    		}
 			    	}
 				} else {
 					sendMessageToPlayers("L'attaque a échoue!");
 
 				}
-				if (ennemyPkmnHP <= 0) {
-					ennemyPkmnHP = 0;
-					sendMessageToPlayers(ennemyPkmn.toString() + " KO !!");
+				if (pkmn2HP <= 0) {
+					pkmn2HP = 0;
+					sendMessageToPlayers(pkmn2.toString() + " KO !!");
 
-					match.setWinner(chosenPkmn);
+					match.setWinner(pkmn1);
 				}
 			} else {
-				sendMessageToPlayers(ennemyPkmn.toString() + " attaque "
-						+ chosenPkmn.toString() + " avec " + attack.getName());
+				sendMessageToPlayers(pkmn2.toString() + " attaque "
+						+ pkmn1.toString() + " avec " + attack.getName());
 
-				factor = chosenPkmn.getType().getVulnerabilityFactor(
+				factor = pkmn1.getType().getVulnerabilityFactor(
 						attack.getType());
 				// Gestion de la précision de l'attaque
 				if (attack.doHit()) {
-					chosenPkmnHP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
+					pkmn1HP -= ((50 * 0.4 + 2) * source.getAttack() * (attack
 							.getPower() * stab))
-							/ (chosenPkmn.getDefense() * 50) * factor;
+							/ (pkmn1.getDefense() * 50) * factor;
 					if(attack.getStatus() != null) {
 			    		if(RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
-			    			chosenPkmn.setStatus(attack.getStatus());
-			    			sendMessageToPlayers(chosenPkmn.toString() + " est " + attack.getStatus().toString());
+			    			pkmn1.setStatus(attack.getStatus());
+			    			sendMessageToPlayers(pkmn1.toString() + " est " + attack.getStatus().toString());
 			    		}
 			    	}
 				} else {
 					sendMessageToPlayers("L'attaque échoue!");
 				}
-				if (chosenPkmnHP <= 0) {
-					chosenPkmnHP = 0;
-					sendMessageToPlayers(chosenPkmn.toString() + " est KO !! ");
-					match.setWinner(ennemyPkmn);
+				if (pkmn1HP <= 0) {
+					pkmn1HP = 0;
+					sendMessageToPlayers(pkmn1.toString() + " est KO !! ");
+					match.setWinner(pkmn2);
 				}
 			}
 			System.out.println("stab:" + stab + " effectiveness:" + factor);
@@ -159,12 +158,10 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 
 	}
 
-	public Pokemon getPokemonCourrant() {
-		return chosenPkmn;
-	}
-
-	public Pokemon getPokemonEnnemi() {
-		return ennemyPkmn;
+	public Pokemon getEnnemyPokemon(Pokemon pokemon) {
+            if(pokemon == pkmn1) 
+                return pkmn2;
+            return pkmn1;
 	}
 
 	@Override
@@ -185,8 +182,8 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 				player1.setActionCode(Constante.MESSAGE_CODE);
 			}
 			// Fin du tour, gestion des statuts
-			ennemyPkmn.doStatus();
-			chosenPkmn.doStatus();
+			pkmn2.doStatus();
+			pkmn1.doStatus();
 			
 		}
 		// Envoi du résultat aux joueurs
@@ -204,19 +201,19 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 	}
 	
 	public void statusDamage(Pokemon source) {
-		if(source.equals(chosenPkmn)) {
-			chosenPkmnHP -= (source.getHp()/8);
+		if(source.equals(pkmn1)) {
+			pkmn1HP -= (source.getHp()/8);
 		} else {
-			ennemyPkmnHP -= (source.getHp()/8);
+			pkmn2HP -= (source.getHp()/8);
 		}
 	}
 
 	@Override
 	public int getHPForPokemon(Pokemon pokemon) {
-		if (this.chosenPkmn == pokemon) {
-			return chosenPkmnHP;
+		if (this.pkmn1 == pokemon) {
+			return pkmn1HP;
 		} else {
-			return ennemyPkmnHP;
+			return pkmn2HP;
 		}
 	}
 

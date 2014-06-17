@@ -16,8 +16,7 @@ import poketournament.Pokemon;
  */
 public interface Mediator {
     public void attack(Pokemon source, Attack attack);
-    public Pokemon getPokemonCourrant();
-    public Pokemon getPokemonEnnemi();
+    public Pokemon getEnnemyPokemon(Pokemon pokemon);
     public Match getMatch();
     public int getHPForPokemon(Pokemon pokemon);
 }

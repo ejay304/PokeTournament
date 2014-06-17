@@ -171,7 +171,7 @@ public class Pokemon {
             case POISON:
             case BRULE:
                 if (RandomNumberGenerator.getInstance().getRandomNumber(3) == 0) {
-                	
+                	mediator.statusDamage(this);
                 }
                 break;
 
@@ -192,6 +192,10 @@ public class Pokemon {
     
     public void setCapacitated() {
     	isIncapacitated = false;
+    }
+    
+    public Status getStatus() {
+    	return status;
     }
 
 	@Override

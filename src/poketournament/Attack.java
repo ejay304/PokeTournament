@@ -122,7 +122,7 @@ public class Attack {
         }
         return doHit;
     }
-
+    
     public Status getStatus() {
         return status;
     }

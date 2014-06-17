@@ -52,8 +52,8 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 		this.chosenPkmn.setMediator(this);
 		this.ennemyPkmn.setMediator(this);
 
-		player1 = new HumanPlayer(this, chosenPkmn, ennemyPkmn);
-		player2 = new AiPlayer(this, ennemyPkmn, chosenPkmn);
+		player1 = new HumanPlayer(this, chosenPkmn);
+		player2 = new AiPlayer(this, ennemyPkmn);
 
 		humanView = new HumanView((HumanPlayer) player1);
 		aiView = new AiView((AiPlayer) player2);
@@ -146,7 +146,7 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 			}
 			System.out.println("stab:" + stab + " effectiveness:" + factor);
 		} else {
-			sendMessageToPlayers(source.toString() + " est incapable d'attaquer!");
+			sendMessageToPlayers(source.toString() + " est incapable d'attaquer car il est " + source.getStatus().toString() + ".");
 			source.setCapacitated();
 		}
 	}

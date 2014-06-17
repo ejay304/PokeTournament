@@ -23,7 +23,7 @@ public class Constante {
     public final static int MESSAGE_CODE = 1;
     public final static int VICTORY_CODE = 2;
     public final static int DEFEAT_CODE = 3;    
-    public final static int TIME_SLEEP_BETWEEN_ACTION = 500;
+    public final static int TIME_SLEEP_BETWEEN_ACTION = 800;
     
     public static void init(){
         BOXES[0] = new Point(45, 518);
@@ -34,12 +34,12 @@ public class Constante {
         BOXES[5] = new Point(790, 518);
         BOXES[6] = new Point(939, 518);
         BOXES[7] = new Point(1093, 518);
-        BOXES[8] = new Point(120, 365);
-        BOXES[9] = new Point(418, 365);
-        BOXES[10] = new Point(720, 365);
-        BOXES[11] = new Point(1020, 365);
-        BOXES[12] = new Point(272, 195);
-        BOXES[13] = new Point(872, 195);
+        BOXES[8] = new Point(120, 353);
+        BOXES[9] = new Point(418, 353);
+        BOXES[10] = new Point(720, 353);
+        BOXES[11] = new Point(1020, 353);
+        BOXES[12] = new Point(272, 185);
+        BOXES[13] = new Point(872, 185);
         BOXES[14] = new Point(568, 25);  
     }
 

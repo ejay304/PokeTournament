@@ -15,6 +15,7 @@ import poketournament.Pokemon;
 import view.player.AiView;
 import view.player.HumanView;
 import config.Constante;
+import poketournament.Status;
 
 /**
  *
@@ -64,6 +65,22 @@ public class FightMediator extends Observable implements Mediator, Runnable {
     public Match getMatch() {
         return match;
     }
+    
+    /**
+	 * Change le statut du pokemon cible
+	 * 
+	 * @param source
+	 *            La source du statut
+	 * @param newStatus
+	 *            Le nouveau statut
+	 */
+	public void changeStatus(Pokemon source, Status newStatus) {
+		if (source.equals(chosenPkmn)) {
+			ennemyPkmn.setStatus(newStatus);
+		} else {
+			chosenPkmn.setStatus(newStatus);
+		}
+	}
 
     // c.f. : http://www.pokepedia.fr/index.php/Calcul_des_d%C3%A9g%C3%A2ts
     public void attack(Pokemon source, Attack attack) {

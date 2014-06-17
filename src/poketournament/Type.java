@@ -163,4 +163,8 @@ public class Type {
 		return factor;
 		
 	}
+        
+        public String toString(){
+            return this.name;
+        }
 }

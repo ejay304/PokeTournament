@@ -19,8 +19,8 @@ public class HumanPlayer extends Player {
 
     private Attack attackSelected;
 
-    public HumanPlayer(FightMediator fight, Pokemon chosenPkmn, Pokemon ennemyPkmn) {
-        super(fight, chosenPkmn, ennemyPkmn);
+    public HumanPlayer(FightMediator fight, Pokemon chosenPkmn) {
+        super(fight, chosenPkmn);
         System.out.println("%Human player thread started%");
     }
 

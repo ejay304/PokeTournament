@@ -7,6 +7,8 @@ package view.player;
 
 import config.Constante;
 import static config.Constante.*;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -19,6 +21,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 import player.HumanPlayer;
 import player.Player;
 import poketournament.Attack;
@@ -31,13 +35,18 @@ public class HumanView extends PlayerView {
 
     private JFrame frame;
     private final JPanel panelAttacks;
-    private final JPanel panelMessage;
     private final JPanel panelOwn;
     private final JPanel panelEnnemy;
-    private final JLabel messageLabel;
+    private final JPanel panelMessage;
     private final JButton btnClose;
+    private final JLabel labelMessage;
     private final JLabel labelEnnemyHP;
     private final JLabel labelOwnHP;
+    private final JLabel labelEnnemyName;
+    private final JLabel labelOwnName;
+    
+    private final JProgressBar progressBarHealthOwn;
+    private final JProgressBar progressBarHealthEnnemy;
 
     public HumanView(HumanPlayer player) {
         super(player);
@@ -59,47 +68,28 @@ public class HumanView extends PlayerView {
                 frame.dispose();
             }
         });
-        labelEnnemyHP = new JLabel(Integer.toString(getPlayer().getEnnemy().getHp()));
+        
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(3,1));
+        
+        labelEnnemyHP = new JLabel(Integer.toString(player.getMediator().getPokemonEnnemi().getHp()));
         labelOwnHP = new JLabel(Integer.toString(getPlayer().getPokemon().getHp()));
-        panelEnnemy = new JPanel() {
-            {
-                setSize(80, 100);
-                setLocation(new Point(0, 200));
-                setOpaque(false);
-
-                ImageIcon image = new ImageIcon(
-                        new ImageIcon(getClass().getResource(
-                                        RESSOURCES + getPlayer().getPokemon().getName() + "-back.png")).
-                        getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
-
-                this.add(new JLabel(image));
-                this.add(labelOwnHP);
-
-            }
-        };
-
-        panelOwn = new JPanel() {
-            {
-                setSize(80, 100);
-                setOpaque(false);
-                setLocation(new Point(400, 0));
-
-                ImageIcon image = new ImageIcon(
-                        new ImageIcon(getClass().getResource(
-                                        RESSOURCES + getPlayer().getEnnemy().getName() + ".png")).
-                        getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
-                this.add(new JLabel(image));
-                this.add(labelEnnemyHP);
-            }
-
-        };
-
+        
+        labelEnnemyName = new JLabel(player.getMediator().getPokemonEnnemi().getName());
+        labelOwnName = new JLabel(player.getPokemon().getName());
+        
+        progressBarHealthOwn = new JProgressBar(0, 100);
+        progressBarHealthOwn.setValue(100);
+        progressBarHealthOwn.setStringPainted(true);
+        progressBarHealthOwn.setForeground(Color.GREEN);
+        
+        progressBarHealthEnnemy = new JProgressBar(0, 100);
+        progressBarHealthEnnemy.setValue(100);
+        progressBarHealthEnnemy.setStringPainted(true);
+        progressBarHealthEnnemy.setForeground(Color.GREEN);
+        
         panelAttacks = new JPanel() {
             {
-                setSize(200, 100);
-                setOpaque(false);
-                setLocation(new Point(100, 200));
-
                 for (final Attack attack : getPlayer().getPokemon().getSkillList()) {
                     JButton btn = new JButton(attack.getName());
                     btn.setSize(20, 200);
@@ -117,28 +107,52 @@ public class HumanView extends PlayerView {
                 }
             }
         };
-
-        messageLabel = new JLabel();
-
-        panelMessage = new JPanel() {
+        
+        panelOwn = new JPanel() {
             {
-                setSize(400, 100);
-                setOpaque(false);
-                setLocation(new Point(20, 150));
-                add(messageLabel);
+                ImageIcon image = new ImageIcon(
+                        new ImageIcon(getClass().getResource(
+                                        RESSOURCES + getPlayer().getPokemon().getName() + "-back.png")).
+                        getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+
+                this.add(new JLabel(image));
+                this.add(progressBarHealthOwn);
+                this.add(labelOwnHP);
+                this.add(labelOwnName);
+                this.add(panelAttacks);
             }
         };
 
-        frame.add(panelEnnemy);
-        frame.add(panelOwn);
+        panelEnnemy = new JPanel() {
+            {
+                ImageIcon image = new ImageIcon(
+                        new ImageIcon(getClass().getResource(
+                                        RESSOURCES + getPlayer().getMediator().getPokemonEnnemi().getName() + ".png")).
+                        getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
+                this.add(new JLabel(image));
+                this.add(progressBarHealthEnnemy);
+                this.add(labelEnnemyHP);
+                this.add(labelEnnemyName);
+            }
+        };
+        
+        labelMessage = new JLabel();
+        
+        panelMessage = new JPanel(){
+            {
+                this.add(labelMessage);
+            }
+        };
+        
+        mainPanel.add(panelEnnemy);
+        mainPanel.add(panelMessage);
+        mainPanel.add(panelOwn);
+        frame.setContentPane(mainPanel);
 
-        frame.add(panelAttacks);
-        frame.add(panelMessage);
         panelMessage.setVisible(false);
         panelAttacks.setVisible(false);
 
         System.out.println("{----HumanView Started----}");
-
     }
 
     @Override
@@ -148,8 +162,27 @@ public class HumanView extends PlayerView {
             Thread.sleep(Constante.TIME_SLEEP_BETWEEN_ACTION);
         } catch (InterruptedException ex) {
         }
-        int hpEnnemy = getPlayer().getMediator().getHPForPokemon(getPlayer().getEnnemy());
+        int hpEnnemy = getPlayer().getMediator().getHPForPokemon(getPlayer().getMediator().getPokemonEnnemi());
         int hpOwn = getPlayer().getMediator().getHPForPokemon(getPlayer().getPokemon());
+
+        progressBarHealthOwn.setValue((int)((float)hpOwn / (float)getPlayer().getPokemon().getHp() * 100));
+        
+        System.out.println("------------------HP " + hpOwn);
+        System.out.println("------------------HPF " + getPlayer().getPokemon().getHp());
+         
+        if(progressBarHealthOwn.getValue() <= 50)
+            if(progressBarHealthOwn.getValue() <= 20)
+                progressBarHealthOwn.setForeground(Color.RED);
+            else
+                progressBarHealthOwn.setForeground(Color.ORANGE);
+        
+        progressBarHealthEnnemy.setValue((int)((float)hpEnnemy / (float)getPlayer().getMediator().getPokemonEnnemi().getHp() * 100));
+        
+        if(progressBarHealthEnnemy.getValue() <= 50)
+            if(progressBarHealthEnnemy.getValue() <= 20)
+                progressBarHealthEnnemy.setForeground(Color.RED);
+            else
+                progressBarHealthEnnemy.setForeground(Color.ORANGE);
 
         labelOwnHP.setText(Integer.toString(hpOwn));
         labelEnnemyHP.setText(Integer.toString(hpEnnemy));
@@ -159,20 +192,20 @@ public class HumanView extends PlayerView {
                 panelMessage.setVisible(false);
                 break;
             case DEFEAT_CODE:
-                messageLabel.setText("Défaite");
+                labelMessage.setText("Défaite");
                 panelMessage.add(btnClose);
                 panelAttacks.setVisible(false);
                 panelMessage.setVisible(true);
                 break;
             case VICTORY_CODE:
-                messageLabel.setText("Victoire");
+                labelMessage.setText("Victoire");
                 panelMessage.add(btnClose);
                 panelAttacks.setVisible(false);
                 panelMessage.setVisible(true);
                 break;
             default:
             case MESSAGE_CODE:
-                messageLabel.setText(getPlayer().getMessage());
+                labelMessage.setText(getPlayer().getMessage());
                 panelAttacks.setVisible(false);
                 panelMessage.setVisible(true);
                 break;

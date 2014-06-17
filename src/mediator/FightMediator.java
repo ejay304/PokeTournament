@@ -50,8 +50,8 @@ public class FightMediator extends Observable implements Mediator, Runnable {
         this.chosenPkmn.setMediator(this);
         this.ennemyPkmn.setMediator(this);
 
-        player1 = new HumanPlayer(this, chosenPkmn, ennemyPkmn);
-        player2 = new AiPlayer(this, ennemyPkmn, chosenPkmn);
+        player1 = new HumanPlayer(this, chosenPkmn);
+        player2 = new AiPlayer(this, ennemyPkmn);
 
         humanView = new HumanView((HumanPlayer) player1);
         aiView = new AiView((AiPlayer) player2);

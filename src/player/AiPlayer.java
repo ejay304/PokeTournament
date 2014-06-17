@@ -18,8 +18,8 @@ import poketournament.RandomNumberGenerator;
  */
 public class AiPlayer extends Player {
 
-    public AiPlayer(FightMediator fight, Pokemon chosenPkmn, Pokemon ennemyPkmn) {
-        super(fight, chosenPkmn, ennemyPkmn);
+    public AiPlayer(FightMediator fight, Pokemon chosenPkmn) {
+        super(fight, chosenPkmn);
         System.out.println("%AI Player thread started%");
 
     }

@@ -40,19 +40,27 @@ public class ChooseView extends JFrame {
             JButton btn = new JButton();
                         
             JPanel pokemonData = new JPanel();
-            pokemonData.setLayout(new GridLayout(5,1));
+            pokemonData.setLayout(new GridLayout(3,1));
             
             JLabel name = new JLabel(pokemon.getName());
-            name.setFont(new Font("Serif", Font.PLAIN, 36));
+            name.setFont(new Font("Serif", Font.PLAIN, 30));
+            
+            JLabel type = new JLabel(pokemon.getType().toString());
+            type.setFont(new Font("Serif", Font.PLAIN, 20));
+                        
+            JPanel pokemonSkills = new JPanel();
+            pokemonSkills.setLayout(new GridLayout(2,2));
+            pokemonSkills.add(new JLabel("HP : " + pokemon.getHp()));
+            pokemonSkills.add(new JLabel("ATT : " + pokemon.getAttack()));
+            pokemonSkills.add(new JLabel("DEF : " + pokemon.getDefense()));
+            pokemonSkills.add(new JLabel("SPD : " + pokemon.getSpeed()));
             
             pokemonData.add(name);
-            pokemonData.add(new JLabel("HP : " + pokemon.getHp()));
-            pokemonData.add(new JLabel("ATT : " + pokemon.getAttack()));
-            pokemonData.add(new JLabel("DEF : " + pokemon.getDefense()));
-            pokemonData.add(new JLabel("SPD : " + pokemon.getSpeed()));
+            pokemonData.add(type);
+            pokemonData.add(pokemonSkills);
                         
             JPanel panelChoose = new JPanel();
-            panelChoose.setPreferredSize(new Dimension(300,150));
+            panelChoose.setPreferredSize(new Dimension(330,150));
             panelChoose.setLayout(new GridLayout(1,2));
             System.out.println(pokemon.getName());
             panelChoose.add(new JLabel(new ImageIcon(getClass().getResource(
@@ -61,8 +69,6 @@ public class ChooseView extends JFrame {
             btn.add(panelChoose);
             
             btn.addActionListener(new ActionListener() {
-
-
                 public void actionPerformed(ActionEvent e) {
                     ChooseView.this.dispose();
                     new TournamentView(new Tournament(pokemon));

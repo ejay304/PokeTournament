@@ -9,12 +9,14 @@ public class Attack {
 	private Integer power;
 	private Integer accuracy;
 	private Type type;
+	private Status status;
 
-	public Attack(String name, Integer power, Integer accuracy, Type type) {
+	public Attack(String name, Integer power, Integer accuracy, Type type, Status status) {
 		this.name = name;
 		this.power = power;
 		this.accuracy = accuracy;
 		this.type = type;
+		this.status = status;
 		attacks.put(name, this);
 
 	}

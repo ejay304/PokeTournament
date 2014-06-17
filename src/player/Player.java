@@ -21,16 +21,14 @@ import poketournament.Pokemon;
 public abstract class Player extends Observable {
 
     private Pokemon own;
-    private Pokemon ennemy;
     private String message;
     private Mediator mediator;
     private int action;
 
 
-    protected Player(Mediator mediator, Pokemon own, Pokemon ennemy) {
+    protected Player(Mediator mediator, Pokemon own) {
         this.mediator = mediator;
         this.own = own;
-        this.ennemy = ennemy;
     }
 
     public Pokemon getPokemon() {
@@ -56,11 +54,7 @@ public abstract class Player extends Observable {
         setChanged();
         notifyObservers();
     }
-
-    public Pokemon getEnnemy() {
-        return ennemy;
-    }
-
+    
     public abstract void setAttackSelected(Attack attack);
 
     public int getActionCode() {

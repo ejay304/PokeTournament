@@ -33,8 +33,13 @@ public class Tournament extends Observable implements Observer {
     public Pokemon getPokemon() {
         return chosenPkmn;
     }
+    
+    public Pokemon getWinner(){
+        return matchFinal[0].getWinner();
+    }
 
-    public Match[] getMatches() {
+    public synchronized Match[] getMatches() {
+        System.out.println("tour = " + tour);
 
         switch (tour) {
             case 3:
@@ -42,7 +47,6 @@ public class Tournament extends Observable implements Observer {
             case 2:
                 return matchesDemi;
             case 1:
-            case 0:
                 return matchFinal;
             default:
                 return null;
@@ -97,7 +101,7 @@ public class Tournament extends Observable implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public synchronized void update(Observable o, Object arg) {
         System.out.println("Mise a jour etat tournoi recu");
 
         if (--cptMatch == 0) {

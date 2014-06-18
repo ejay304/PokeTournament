@@ -45,11 +45,12 @@ public class TournamentView extends JFrame implements Observer {
 
     }
 
-    public void paintPokemon(final Pokemon pkmn, final Match match) {
+    public synchronized void paintPokemon(final Pokemon pkmn, final Match match) {
 
         this.add(new JPanel() {
             {
                 setSize(90, 85);
+                System.out.println(i);
                 setLocation(BOXES[i]);
                 setOpaque(false);
 
@@ -85,11 +86,10 @@ public class TournamentView extends JFrame implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-
-        System.out.println(i);
-        if (i != NB_MATCH) {
-            for (final Match match : tournament.getMatches()) {
+    public synchronized void update(Observable o, Object arg) {
+        Match[] matches;
+        if ((matches = tournament.getMatches())!= null) {
+            for (final Match match : matches) {
                 System.out.println("print " + match.getPkmn1().getName() + " " + match.getPkmn2().getName());
 
                 final Pokemon pkmn1 = match.getPkmn1();
@@ -98,7 +98,7 @@ public class TournamentView extends JFrame implements Observer {
 
             }
         } else {
-            final Pokemon pkmn = tournament.getMatches()[0].getWinner();
+            final Pokemon pkmn = tournament.getWinner();
             this.add(new JPanel() {
                 {
                     setSize(90, 85);

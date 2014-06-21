@@ -5,6 +5,7 @@
  */
 package mediator;
 
+import config.Constante;
 import java.util.Observable;
 import player.AiPlayer;
 import player.HumanPlayer;
@@ -16,7 +17,7 @@ import poketournament.RandomNumberGenerator;
 import poketournament.Status;
 import view.player.AiView;
 import view.player.HumanView;
-import config.Constante;
+import view.player.PlayerView;
 
 /**
  * 
@@ -24,17 +25,21 @@ import config.Constante;
  */
 public class FightMediator extends Observable implements Mediator, Runnable {
 
-	private final Match match;
-	private final Pokemon pkmn1;
-	private final Pokemon pkmn2;
-	private int pkmn1HP;
-	private int pkmn2HP;
-	private final HumanView humanView;
-	private final AiView aiView;
-	private final Player player1;
-	private final Player player2;
+	private final Match match; //le match pour lequel le médiateur s'applique
+	private final Pokemon pkmn1; //reference sur le premier pokemon
+	private final Pokemon pkmn2; //reference sur le deuxième pokemon
+	private int pkmn1HP; //la vie courrante du pokemon 1
+	private int pkmn2HP; //la vie courrante du pokemon 2
+	private final PlayerView player1View; //vue pour le premier joueur
+	private final PlayerView player2View; // vue pour le deuxième joueur
+	private final Player player1; // le joueur 1
+	private final Player player2; // le joueur 2
 	private int turn;
 
+        /**
+         * Constructeur
+         * @param match le match pour lequel le médiateur s'applique 
+         */
 	public FightMediator(Match match) {
 		this.match = match;
 
@@ -50,18 +55,19 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 
 		this.pkmn1.setMediator(this);
 		this.pkmn2.setMediator(this);
-
+                //notre premier joueur est un humain, le deuxième une AI
 		player1 = new HumanPlayer(this, pkmn1);
 		player2 = new AiPlayer(this, pkmn2);
 
-		humanView = new HumanView((HumanPlayer) player1);
-		aiView = new AiView((AiPlayer) player2);
+		player1View = new HumanView((HumanPlayer) player1);
+		player2View = new AiView((AiPlayer) player2);
 
 		turn = ((pkmn1.getSpeed() >= match.getPkmn1().getSpeed()) ? 0 : 1);
 
 		new Thread(this).start();
 	}
 
+        // Retourne le match monitoré par le mediator
 	public Match getMatch() {
 		return match;
 	}
@@ -82,6 +88,11 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 		}
 	}
 
+        /**
+         * Gère les attaques des pokemons
+         * @param source le pokemon qui attaque
+         * @param attack l'attaque lancée
+         */
 	// c.f. : http://www.pokepedia.fr/index.php/Calcul_des_d%C3%A9g%C3%A2ts
 	public void attack(Pokemon source, Attack attack) {
 		double stab = (source.getType() == attack.getType() ? 1.5 : 1.0);
@@ -150,6 +161,10 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 		}
 	}
 
+        /**
+         * Envoie un message à tous les joueurs
+         * @param message le message
+         */
 	private void sendMessageToPlayers(String message) {
 		player1.setActionCode(Constante.MESSAGE_CODE);
 		player2.setActionCode(Constante.MESSAGE_CODE);
@@ -158,6 +173,12 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 
 	}
 
+        /**
+         * Retourne le pokemon ennemi 
+         * @param pokemon notre pokemon
+         * @return le pokemon ennemi
+         */
+        @Override
 	public Pokemon getEnnemyPokemon(Pokemon pokemon) {
             if(pokemon == pkmn1) 
                 return pkmn2;
@@ -165,6 +186,9 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 	}
 
 	@Override
+        /**
+         * Thread gérant un combat
+         */
 	public void run() {
 		while (this.match.getWinner() == null) {
 
@@ -200,6 +224,10 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 		}
 	}
 	
+        /**
+         * Attaque sur le temps
+         * @param source 
+         */
 	public void statusDamage(Pokemon source) {
 		if(source.equals(pkmn1)) {
 			pkmn1HP -= (source.getHp()/8);

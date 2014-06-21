@@ -50,7 +50,6 @@ public class TournamentView extends JFrame implements Observer {
         this.add(new JPanel() {
             {
                 setSize(90, 85);
-                System.out.println(i);
                 setLocation(BOXES[i]);
                 setOpaque(false);
 

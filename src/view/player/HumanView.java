@@ -107,7 +107,6 @@ public class HumanView extends PlayerView {
                     });
                     String typeNom = sansAccent(attack.getType().getName().toLowerCase());
   
-                    System.out.println(RESSOURCES_TYPE + typeNom + ".png");
                     ImageIcon image = new ImageIcon(
                             new ImageIcon(getClass().getResource(
                                             RESSOURCES_TYPE

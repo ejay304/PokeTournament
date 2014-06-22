@@ -29,6 +29,8 @@ public class Match extends Observable implements Runnable, Observer {
             Pokemon chosenPkmn) {
         this.pkmn1 = pkmn1;
         this.pkmn2 = pkmn2;
+        pkmn1.setStatus(Status.EN_FORME);
+        pkmn2.setStatus(Status.EN_FORME);
         this.chosenPkmn = chosenPkmn;
         this.autoWin = autoWin;
         synchronized (this) {

@@ -1,20 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package player;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import poketournament.Attack;
 import mediator.FightMediator;
 import poketournament.Pokemon;
 import poketournament.RandomNumberGenerator;
 
 /**
- *
- * @author admin
+ * Represente un joueur AI
  */
 public class AiPlayer extends Player {
 
@@ -30,6 +22,7 @@ public class AiPlayer extends Player {
     }
 
 
+    //inutile car cela est fait automatiquement
     @Override
     public void setAttackSelected(Attack attack) {
     }

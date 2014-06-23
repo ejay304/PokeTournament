@@ -3,8 +3,7 @@ package poketournament;
 import java.util.Random;
 
 /**
- * Générateur de nombre aléatoire.
- * 
+ * Générateur de nombre aléatoire. 
  */
 public class RandomNumberGenerator {
 

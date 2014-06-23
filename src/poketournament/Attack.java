@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Représente une attaque de pokémon.
- * 
+ * Représente une attaque de pokémon
  */
 public class Attack {
 

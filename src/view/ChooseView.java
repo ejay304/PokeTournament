@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import java.awt.Dimension;
@@ -18,8 +14,7 @@ import poketournament.Pokemon;
 import poketournament.Tournament;
 
 /**
- *
- * @author Romain Therisod
+ * Interface graphique permettant la sélection d'un champion
  */
 public class ChooseView extends JFrame {
     

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mediator;
 
 import config.Constante;
@@ -20,8 +15,7 @@ import view.player.HumanView;
 import view.player.PlayerView;
 
 /**
- * 
- * @author Fabio
+ * Représente le médiateur d'un combat
  */
 public class FightMediator extends Observable implements Mediator, Runnable {
 
@@ -34,7 +28,7 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 	private final PlayerView player2View; // vue pour le deuxième joueur
 	private final Player player1; // le joueur 1
 	private final Player player2; // le joueur 2
-	private int turn;
+	private int turn; //le tour actuel
 
         /**
          * Constructeur

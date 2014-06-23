@@ -10,11 +10,7 @@ import javax.swing.*;
 import poketournament.*;
 
 /**
- * TournamentView
- *
- * @since 26.05.2014
- * @author Alain FRESCO
- * @version 1.0
+ * Inteface graphique affichant le tournoi
  */
 public class TournamentView extends JFrame implements Observer {
 

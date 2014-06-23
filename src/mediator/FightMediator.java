@@ -225,7 +225,7 @@ public class FightMediator extends Observable implements Mediator, Runnable {
 	}
 	
         /**
-         * Attaque sur le temps
+         * Attaque sur le temps (poison, brulure)
          * @param source 
          */
 	public void statusDamage(Pokemon source) {

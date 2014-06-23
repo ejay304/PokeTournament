@@ -5,14 +5,15 @@ import java.util.Random;
 /**
  * Générateur de nombre aléatoire.
  * 
- * @author gaetanchevalley
- * 
  */
 public class RandomNumberGenerator {
 
 	private Random randomNumberGenerator;
 	private static RandomNumberGenerator instance;
 
+	/**
+	 * Constructeur.
+	 */
 	private RandomNumberGenerator() {
 		randomNumberGenerator = new Random();
 	}
